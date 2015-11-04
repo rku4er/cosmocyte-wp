@@ -1,0 +1,43 @@
+.socials{
+    white-space: nowrap;
+    display: inline-block;
+    
+    >span{
+        display: none;
+        @media (min-width: $screen-md-min){
+            display: inline;
+            margin-right: 0.5em;
+        }
+    }
+    a{
+        border: 2px solid $gray;
+        color: $gray;
+        border-radius: 50%;
+        display: inline-block;
+        position: relative;
+        text-align: center;
+        transition: all .2s ease;
+        line-height: 1.3em;
+        width: 1.7em;
+        height: 1.7em;
+        padding: inherit;
+        transition: .3s ease-in-out;
+        transition-property: color, background-color, border-color;
+
+        &+a{
+            margin-left: 0.5em;
+        }
+
+        &:hover,
+        &:focus{
+            color: #fff;
+            border-color: $gray-dark;
+            background-color: $gray-dark;
+        }
+
+        .fa{
+            vertical-align: middle;
+        }
+    }
+}
+

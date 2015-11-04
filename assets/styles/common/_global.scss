@@ -1,0 +1,71 @@
+/* Selection color */
+*::-moz-selection {
+    color: #fff;
+    background: $brand-primary;
+    text-shadow: none;
+}
+*::selection {
+    color: #fff;
+    background: $brand-primary;
+    text-shadow: none;
+}
+
+/* Headings offset */
+h1, h2, h3, h4, h5, h6{
+     margin: 1em 0;
+}
+
+/*Magic uls*/
+ul:not(.nav):not(.dropdown-menu):not(.gform_fields):not('.gfield_radio'):not('.gfield_checkbox'){
+  list-style: none;
+  padding-left: 25px;
+
+  li:before{
+    content: "\27A4";
+    display: inline-block;
+    transform: translateX(-18px);
+    width: 0;
+  }
+}
+
+/* Fix VC rows */
+.row{
+    width: auto;
+}
+
+/*sticky footer*/
+body {
+    display: table;
+    width: 100%;
+    height: 100vh;
+    -webkit-overflow-scrolling: touch;
+}
+.wrap {
+    display: table-row;
+}
+.content-info{
+    display: table-row;
+    height: 1px;
+}
+
+/*main layout*/
+.wrap {
+    &.container{
+        max-width: 100%;
+        @media (max-width: $screen-xs-max){
+            width: 100%;
+        }
+    }
+    &.container-fluid{
+        width: 100%;
+    }
+}
+
+
+/*rollover effects*/
+.table-hover > tbody > tr{
+    transition: background-color .1s ease-in-out;
+}
+.list-group-item{
+    transition: background-color 0.1s ease-in-out;
+}

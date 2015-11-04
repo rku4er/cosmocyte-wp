@@ -1,0 +1,15 @@
+#scrollTopLink{
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 40px;
+    margin-right: $grid_gutter_width/2;
+    transform: translate3d(0,-50%,0);
+    color: $brand-primary;
+    transition: color .2s ease;
+
+    &:hover,
+    &:focus{
+        color: #000;;
+    }
+}

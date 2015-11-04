@@ -1,0 +1,28 @@
+p >img,
+p >a >img,
+p >iframe,
+p >a >iframe{
+    max-width: 100%;
+}
+img[class*="img-"],
+.img-thumbnail{
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    transition: .3s ease-in-out;
+    transition-property: box-shadow, border-color, transform;
+    border: 0 none;
+    padding: 0;
+
+}
+a img[class*="img-"],
+a .img-thumbnail{
+    &:hover,
+    &:focus{
+        box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        border: 0 none;
+    }
+
+}
+.thumbnail, .wp-caption {
+    border: 0 none;
+    font-size: ceil(($font-size-base * 0.9));
+}

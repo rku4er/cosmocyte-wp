@@ -1,0 +1,117 @@
+.gallery{
+    @media (max-width: $screen-xs-max){
+        text-align: center;
+    }
+    .gallery-row{
+        margin-left: 0;
+        margin-right: 0;
+        &+.gallery-row{
+            @media (min-width: $screen-sm-min){
+                margin-top: 1vw;
+            }
+            @media (min-width: $screen-md-min){
+                margin-top: 2vw;
+            }
+        }
+        & >div[class^="col-"]{
+            padding: $padding-base-vertical;
+        }
+        @media (max-width: $screen-xs-max){
+            &.row{
+                display: inline;
+                &:before,
+                &:after{
+                    display: none;
+                }
+            }
+            &.row >div[class^="col-"]{
+                display: inline-block;
+                width: 50%;
+            }
+        }
+    }
+    .thumb-wrapper{
+        text-align: center;
+
+        @media (min-width: $screen-md-min){
+            padding: 0 3vw;
+        }
+        .thumbnail{
+            padding: 0;
+            border: 0 none;
+            border-radius: 0;
+            margin-bottom: 0;
+            display: inline-block;
+            position: relative;
+            transition: .3s ease-in-out;
+            transition-property: box-shadow, transform;
+
+            &,
+            & >img{
+                width: 100%;
+                vertical-align: top;
+            }
+
+            &:before,
+            &:after{
+                content: "";
+                display: block;
+                position: absolute;
+                transition: opacity .3s ease-in-out;
+            }
+
+            &:before{
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                opacity: 0;
+                background-color: $gray;
+            }
+            &:after{
+                content: "";
+                top: 50%;
+                left: 50%;
+                font-family: "Glyphicons Halflings";
+                font-size: 40px;
+                line-height: 1;
+                margin: -0.4em 0 0 -0.45em;
+                opacity: 0;
+                text-rendering: auto;
+                animation-duration: .75s;
+                color: #fff;
+            }
+            &:hover {
+                /*transform: translate3d(0,-1px,0);*/
+
+                &:before{
+                    opacity: 0.7;
+                }
+                &:after{
+                    opacity: 1;
+                    animation-name: fadeInDown;
+                }
+            }
+        }
+        .thumb-title{
+            color: black;
+            font-size: $font-size-large;
+            margin: 0;
+            background-color: $accent-color;
+            font-size: 16px;
+            padding: 10px;
+            text-transform: uppercase;
+
+            @media (min-width: $screen-lg-min){
+                font-size: 18px;
+                padding: 15px;
+            }
+            @media (max-width: $screen-md-max){
+                font-size: 14px;
+            }
+        }
+        .caption{
+            padding: $thumbnail-caption-padding;
+        }
+    }
+}

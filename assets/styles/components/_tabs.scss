@@ -1,0 +1,94 @@
+.nav-tabs{
+    border-bottom: 0 none;
+    >li{
+        margin-bottom: 0;
+        >a{
+            border-radius: 0;
+            transition: .2s ease-in-out;
+            transition-property: border, background-color, color, box-shadow, transform;
+            margin: 0;
+            border-style: solid;
+
+            &,
+            &:hover,
+            &:focus{
+                border-width: 0 0 2px;
+                border-bottom-color: transparent;
+                color: $brand-primary;
+            }
+        }
+        &.active >a,
+        &.active >a:hover,
+        &.active >a:focus{
+            border-width: 0 0 2px;
+            border-color: lighten($accent-color, 10%);
+        }
+        &.active >a{
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            transform: translate3d(0, -1px, 0);
+        }
+    }
+    &.tabs-vertical{
+        border-bottom: 0 none;
+
+        &.tabs-left{
+            >li{
+                text-align: right;
+                >a,
+                >a:hover,
+                >a:focus{
+                    border-width: 0 1px 0 0;
+                    border-right-color: lighten($brand-primary, 20%);
+                }
+                &.active >a,
+                &.active >a:hover,
+                &.active >a:focus{
+                    border-right-width: 2px;
+                }
+            }
+        }
+        &.tabs-right{
+            >li{
+                text-align: left;
+                >a,
+                >a:hover,
+                >a:focus{
+                    border-width: 0 0 0 1px;
+                    border-left-color: lighten($brand-primary, 20%);
+                }
+                &.active >a,
+                &.active >a:hover,
+                &.active >a:focus{
+                    border-left-width: 2px;
+                }
+            }
+        }
+        >li{
+            float: none;
+            text-align: right;
+
+            >a{
+                transition: .2s ease-in-out;
+                transition-property: border, background-color, color, box-shadow, transform;
+
+                &,
+                &:hover,
+                &:focus{
+                    border-width: 0 1px 0 0;
+                    border-right-color: lighten($brand-primary, 20%);
+                }
+            }
+            &.active >a{
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+                transform: translate3d(1px,0,0);
+                border-right-color: lighten($accent-color, 10%);
+            } 
+            &.active >a,
+            &.active >a:hover,
+            &.active >a:focus{
+                border-right-width: 2px;
+                border-right-color: lighten($accent-color, 10%);
+            }
+        }
+    }
+}
