@@ -165,7 +165,7 @@
             spaceTop: function(){
                 $('.navbar-fixed-top').each(function(){
                     var $self = $(this);
-                    $self.next().css('padding-top', $self.height());
+                    $('.wrap >.inner').css('padding-top', $self.height());
                 });
             }
           };

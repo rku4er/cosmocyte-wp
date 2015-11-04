@@ -37,7 +37,7 @@ function slider_init( $attr ){
         $animation   = $animation ? $animation : $atts['animation'];
         $parallax    = get_post_meta( $page_ID, $prefix .'parallax', true );
         $parallax    = $parallax ? $parallax : $atts['parallax'];
-        $pause       = get_post_meta( $page_ID, $prefix .'pause', true );
+        $pause       = get_post_meta( $page_ID, $prefix .'hover', true );
         $pause       = $pause ? $pause : $atts['pause'];
         $wrap        = get_post_meta( $page_ID, $prefix .'wrap', true );
         $wrap        = $wrap ? $wrap : $atts['wrap'];
@@ -365,6 +365,45 @@ function get_section( $atts, $content = null ) {
     $atts = wp_parse_args( $atts, $defaults );
 
     $html = '<div class="layout-section"><div class="inner">'. $content .'</div></div>';
+
+    return do_shortcode($html);
+}
+
+/**
+  * Container
+  */
+add_shortcode( 'container', __NAMESPACE__.'\\get_container' );
+function get_container( $atts, $content = null ) {
+    $defaults = array ();
+    $atts = wp_parse_args( $atts, $defaults );
+
+    $html = '<div class="container">'. $content .'</div>';
+
+    return do_shortcode($html);
+}
+
+/**
+  * Row
+  */
+add_shortcode( 'row', __NAMESPACE__.'\\get_row' );
+function get_row( $atts, $content = null ) {
+    $defaults = array ();
+    $atts = wp_parse_args( $atts, $defaults );
+
+    $html = '<div class="row">'. $content .'</div>';
+
+    return do_shortcode($html);
+}
+
+/**
+  * Column
+  */
+add_shortcode( 'column', __NAMESPACE__.'\\get_column' );
+function get_column( $atts, $content = null ) {
+    $defaults = array ();
+    $atts = wp_parse_args( $atts, $defaults );
+
+    $html = '<div class="column">'. $content .'</div>';
 
     return do_shortcode($html);
 }

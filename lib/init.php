@@ -77,7 +77,7 @@ function widgets_init() {
 /**
  * Work Post Type
  */
- //add_action( 'init', __NAMESPACE__ . '\\create_post_type_product' );
+ add_action( 'init', __NAMESPACE__ . '\\create_post_type_product' );
 function create_post_type_product() {
 
   register_post_type( 'product',
@@ -108,7 +108,7 @@ function create_post_type_product() {
 
 
 // hook into the init action and call create_book_taxonomies when it fires
-//add_action( 'init', __NAMESPACE__ . '\\create_product_tax' );
+add_action( 'init', __NAMESPACE__ . '\\create_product_tax' );
 function create_product_tax() {
     register_taxonomy(
         'product_category',

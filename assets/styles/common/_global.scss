@@ -10,12 +10,12 @@
     text-shadow: none;
 }
 
-/* Headings offset */
+/* Headings margins */
 h1, h2, h3, h4, h5, h6{
      margin: 1em 0;
 }
 
-/*Magic uls*/
+/*Custom bulleted lists*/
 ul:not(.nav):not(.dropdown-menu):not(.gform_fields):not('.gfield_radio'):not('.gfield_checkbox'){
   list-style: none;
   padding-left: 25px;
@@ -50,14 +50,25 @@ body {
 
 /*main layout*/
 .wrap {
-    &.container{
-        max-width: 100%;
-        @media (max-width: $screen-xs-max){
+    /*content offset */
+    >.inner{
+        padding-top: 78px;
+        padding-left: 0;
+        padding-right: 0;
+
+        @media (min-width: $screen-sm-min){
+            padding-top: 149px;
+        }
+
+        &.container{
+            max-width: 100%;
+            @media (max-width: $screen-xs-max){
+                width: 100%;
+            }
+        }
+        &.container-fluid{
             width: 100%;
         }
-    }
-    &.container-fluid{
-        width: 100%;
     }
 }
 
