@@ -343,6 +343,17 @@
                      'alpha' => '1'
                  ),
              ),
+             array(
+                 'id'       => 'footer-text-color',
+                 'title'    => __( 'Footer text color', 'redux-framework-demo' ),
+                 'type'     => 'color_rgba',
+                 'mode'     => 'color',
+                 'output'   => array( '.content-info', '.content-info a' ),
+                 'default'  => array(
+                     'color' => '#ffffff',
+                     'alpha' => '1'
+                 ),
+             ),
          )
      ) );
 

@@ -53,6 +53,7 @@ body {
     /*content offset */
     >.inner{
         padding-top: 78px;
+        padding-bottom: $grid-gutter-width;
         padding-left: 0;
         padding-right: 0;
 
@@ -72,6 +73,11 @@ body {
     }
 }
 
+/*content offsets*/
+.main >.container{
+     padding-top: $grid-gutter-width;
+     padding-bottom: $grid-gutter-width;
+}
 
 /*rollover effects*/
 .table-hover > tbody > tr{

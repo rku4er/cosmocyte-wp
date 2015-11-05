@@ -10,8 +10,8 @@
         }
     }
     a{
-        border: 2px solid $gray;
-        color: $gray;
+        border: 2px solid $navbar-default-link-color;
+        color: $navbar-default-link-color;
         border-radius: 50%;
         display: inline-block;
         position: relative;
@@ -24,15 +24,20 @@
         transition: .3s ease-in-out;
         transition-property: color, background-color, border-color;
 
+        @media (min-width: $screen-sm-min){
+            color: $navbar-default-link-hover-color;
+            background-color: $navbar-default-link-color;
+        }
+
         &+a{
             margin-left: 0.5em;
         }
 
         &:hover,
         &:focus{
-            color: #fff;
-            border-color: $gray-dark;
-            background-color: $gray-dark;
+            color: $navbar-default-link-color;
+            background-color: $navbar-default-link-hover-color;
+            border-color: $navbar-default-link-hover-color;
         }
 
         .fa{

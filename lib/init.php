@@ -80,15 +80,39 @@ function widgets_init() {
  add_action( 'init', __NAMESPACE__ . '\\create_post_type_product' );
 function create_post_type_product() {
 
-  register_post_type( 'product',
+  register_post_type( 'interactive',
     array(
       'labels' => array(
-        'name' => __( 'Products' ),
-        'singular_name' => __( 'Product' ),
-        'add_new' => __( 'Add Product' ),
-        'add_new_item' => __( 'Add New Product' ),
+        'name' => __( 'Interactive' ),
+        'singular_name' => __( 'Interactive' ),
+        'add_new' => __( 'Add Interactive' ),
+        'add_new_item' => __( 'Add New Interactive' ),
       ),
-      'rewrite' => array('slug' => __( 'product' )),
+      'rewrite' => array('slug' => __( 'interactive' )),
+      'public' => true,
+      'exclude_from_search' => false,
+      'has_archive' => true,
+      'hierarchical' => true,
+      'menu_position' => 4,
+      'capability_type' => 'post',
+      'can_export' => true,
+      'supports' => array(
+        'title',
+        'editor',
+        'thumbnail'
+      )
+    )
+  );
+
+  register_post_type( 'animations',
+    array(
+      'labels' => array(
+        'name' => __( 'Animations' ),
+        'singular_name' => __( 'Animations' ),
+        'add_new' => __( 'Add Animations' ),
+        'add_new_item' => __( 'Add New Animations' ),
+      ),
+      'rewrite' => array('slug' => __( 'animations' )),
       'public' => true,
       'exclude_from_search' => false,
       'has_archive' => true,
@@ -111,14 +135,14 @@ function create_post_type_product() {
 add_action( 'init', __NAMESPACE__ . '\\create_product_tax' );
 function create_product_tax() {
     register_taxonomy(
-        'product_category',
-        'product',
+        'case_studies',
+        array('interactive','animations'),
         array(
-            'label' => __( 'Category' ),
+            'label' => __( 'Case Studies' ),
             'hierarchical' => true,
             'query_var' => true,
             'rewrite' => array(
-                'slug' => 'product-category',
+                'slug' => 'case-studies',
                 'with_front' => false
             )
         )

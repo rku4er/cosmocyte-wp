@@ -2,8 +2,7 @@
 $darkbg-text: rgba(255,255,255,0.84);
 $lightbg-text: rgba(0,0,0,0.84);
 $icon-color: rgba(0,0,0,0.5);
-$accent-color: #0ab51e;
-$accent-color2: #009dd8;
+$accent-color: #8DC73D;
 
 // Checkboxes
 $checkbox-size: 20px;
@@ -172,8 +171,8 @@ $table-border-color:            lighten($brand-primary, 15%);
 
 $btn-font-weight:                bold;
 
-$btn-default-color:              $gray-dark;
-$btn-default-bg:                 transparent;
+$btn-default-color:              $text-color;
+$btn-default-bg:                 $gray-lighter;
 $btn-default-border:             $brand-primary;
 
 $btn-primary-color:              #fff;
@@ -268,7 +267,7 @@ $dropdown-link-color:            $gray-dark;
 //** Hover color for dropdown links.
 $dropdown-link-hover-color:      #fff;
 //** Hover background for dropdown links.
-$dropdown-link-hover-bg:         transparentize($accent-color, 0.4);
+$dropdown-link-hover-bg:         $accent-color;
 
 //** Active dropdown menu item text color.
 $dropdown-link-active-color:     $dropdown-link-color;
@@ -392,8 +391,8 @@ $navbar-default-bg:                transparent;
 $navbar-default-border:            darken($navbar-default-bg, 6.5%);
 
 // Navbar links
-$navbar-default-link-color:                $gray-dark;
-$navbar-default-link-hover-color:          black;
+$navbar-default-link-color:                #fff;
+$navbar-default-link-hover-color:          $accent-color;
 $navbar-default-link-hover-bg:             transparent;
 $navbar-default-link-active-color:         $navbar-default-link-hover-color;
 $navbar-default-link-active-bg:            transparent;

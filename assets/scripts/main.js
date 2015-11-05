@@ -90,22 +90,6 @@
             });
         });
 
-        // Price Range
-        $('.nouislider').each(function(){
-            var slider = $('<div/>');
-            $(this).hide().after(slider);
-
-            noUiSlider.create(slider[0], {
-                start: [ 0, 100 ],
-                step: 1,
-                connect: true,
-                range: {
-                    'min': [ 0 ],
-                    'max': [ 100 ]
-                }
-            });
-        });
-
         var ripples = [
           ".carousel-control",
           ".btn:not(.btn-link)",
@@ -118,16 +102,6 @@
         ].join(",");
 
         $(ripples).ripples();
-
-        // Intense images
-        var images = document.querySelectorAll('img');
-        if(images.length){
-          [].forEach.call(images, function(i){
-            if(i.getAttribute('data-run') === 'intense') {
-              new Intense(i);
-            }
-          });
-        }
 
         // File input replacement
         $("input[type=file]").fileinput({
@@ -219,7 +193,7 @@
             navbar().spaceTop();
             slider().setHeight();
             slider().setBgPos();
-            //watchDropdowns('.dropdown .dropdown');
+            watchDropdowns('.dropdown .dropdown');
         }, 100);
 
         function watchDropdowns(selector){

@@ -1,10 +1,11 @@
 .content-info{
-    font-size: 14px;
+    font-size: ceil($font-size-base * 0.8);
     font-weight: 500;
 
     > .inner{
         z-index: 1;
         position: relative;
+        padding: $grid-gutter-width 0; 
 
         &:before {
             content: "";
