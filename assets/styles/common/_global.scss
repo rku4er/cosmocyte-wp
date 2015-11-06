@@ -57,10 +57,6 @@ body {
         padding-left: 0;
         padding-right: 0;
 
-        @media (min-width: $screen-sm-min){
-            padding-top: 149px;
-        }
-
         &.container{
             max-width: 100%;
             @media (max-width: $screen-xs-max){
@@ -85,4 +81,25 @@ body {
 }
 .list-group-item{
     transition: background-color 0.1s ease-in-out;
+}
+
+/*
+ * video backgrounds
+ */
+.visual{
+    position: relative;
+    background: transparent;
+    min-height: 400px;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-size: 100% auto;
+
+    .ytplayer-container{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: -1;
+    }
 }

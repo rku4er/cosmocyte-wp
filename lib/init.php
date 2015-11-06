@@ -47,6 +47,15 @@ function setup() {
   // Allow shortcode execution in widgets
   add_filter('widget_text', 'do_shortcode');
 
+  // Gets rid of the word "Category:" in front of the Archive title
+  add_filter( 'get_the_archive_title', function( $title ) {
+
+    if ( is_post_type_archive() ) {
+      $title = post_type_archive_title();
+    }
+    return $title;
+  } );
+
 }
 add_action('after_setup_theme', __NAMESPACE__ . '\\setup');
 

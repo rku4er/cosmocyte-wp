@@ -429,6 +429,7 @@ function get_parallax_section( $atts, $content = null ) {
 
     return do_shortcode($html);
 }
+
 /**
   * Parallax Layer
   */
@@ -470,3 +471,4 @@ function get_clearfix( $atts, $content = null ) {
 
     return do_shortcode($html);
 }
+

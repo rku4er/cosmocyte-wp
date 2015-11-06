@@ -69,7 +69,15 @@ function sage_register_general_options() {
     ) );
 
     $cmb_demo->add_field( array(
-        'name' => __( 'Background Image', 'cmb2' ),
+        'name' => __( 'YouTube video ID', 'cmb2' ),
+        'desc' => __( 'Put Youtube video id', 'cmb2' ),
+        'id'   => $prefix . 'bg_video',
+        'type' => 'text',
+        // 'repeatable' => true,
+    ) );
+
+    $cmb_demo->add_field( array(
+        'name' => __( 'Background image fallback', 'cmb2' ),
         'desc' => __( 'Upload an image or enter an URL', 'cmb2' ),
         'id'   => $prefix . 'bg_image',
         'type' => 'file',

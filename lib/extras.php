@@ -136,17 +136,17 @@ function choice_render($choice_markup, $choice, $field, $value){
 }
 
 /**
- * Page background
+ * Video background
  */
 
-add_action( 'get_header', __NAMESPACE__ . '\\page_background', 9999 );
-function page_background(){
+add_action( 'get_header', __NAMESPACE__ . '\\page_video_bg', 9999 );
+function page_video_bg(){
     global $wp_query;
     $page_ID = $wp_query->queried_object->ID;
     $prefix = 'sage_page_options_';
-    $page_background = get_post_meta( $page_ID, $prefix .'bg_image', true );
-    $page_background_opacity = get_post_meta( $page_ID, $prefix .'bg_opacity', true );
-    echo $page_background ? '<div class="page-background" style="background-image: url(' . $page_background . '); opacity: '. $page_background_opacity .'"></div>' : '';
+    $bg_image = get_post_meta( $page_ID, $prefix .'bg_image', true );
+    $bg_video = get_post_meta( $page_ID, $prefix .'bg_video', true );
+    echo $bg_video ? '<div class="visual" data-youtube_video_id="'. $bg_video .'" style="background-image: url(' . $bg_image . ');"></div>' : '';
 }
 
 /**
@@ -202,3 +202,4 @@ function site_favicon() {
     $favicon = $options['favicon']['url'] ? $options['favicon']['url'] : get_template_directory_uri().'/dist/images/favicon.ico';
     echo '<link rel="shortcut icon" href="'. $favicon .'">';
 }
+

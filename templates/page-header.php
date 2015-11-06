@@ -6,8 +6,9 @@
     $hide_header = get_post_meta( $curr_ID, $prefix .'hide_title', true );
 ?>
 
-<?php if(!$hide_header && !is_search()): ?>
+<?php if(!$hide_header): ?>
 <div class="page-header">
     <h1> <?php echo Titles\title(); ?> </h1>
 </div>
 <?php endif; ?>
+
