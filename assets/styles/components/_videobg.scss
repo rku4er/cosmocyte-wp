@@ -1,0 +1,68 @@
+/*
+ * FUllscreen BG
+ */
+
+.background-video {
+    background-size: cover;
+    background-position: top center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    position: relative;
+    min-height: 300px;
+
+    video,
+    source {
+        bottom: 0;
+        left: 0;
+        min-height: 100%;
+        min-width: 100%;
+        position: absolute;
+    }
+
+    >div:first-child{
+        z-index: -1;
+
+        bottom: 0;
+        height: 100%;
+        left: 0;
+        min-width: 100%;
+        overflow: hidden;
+        position: absolute;
+        right: 0;
+        top: 0;
+
+    }
+    &.loaded{
+        >div:first-child{
+            z-index: 1;
+        }
+        .ytplayer-container{
+            display: block;
+        }
+    }
+
+    .ytplayer-container {
+        bottom: 0;
+        height: 100%;
+        left: 0;
+        min-width: 100%;
+        overflow: hidden;
+        position: absolute;
+        right: 0;
+        top: 0;
+        z-index: 0;
+    }
+
+    .ytplayer-shield {
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 2;
+    }
+
+    .ytplayer-player {
+        position: absolute;
+    }
+}

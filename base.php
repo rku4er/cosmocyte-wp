@@ -21,6 +21,7 @@ use Roots\Sage\Utils;
     ?>
     <div class="wrap" role="document">
         <div class="inner <?php echo Utils\get_container_class(); ?>">
+          <?php do_action('get_visual'); ?>
           <main class="main" role="main">
             <?php include Wrapper\template_path(); ?>
           </main><!-- /.main -->

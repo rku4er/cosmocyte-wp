@@ -106,17 +106,6 @@
 
         $(ripples).ripples();
 
-        /*
-         * video backgrounds
-         */
-        $('.visual').each(function(){
-            var $self = $(this);
-
-            $self.YTPlayer({
-              fitToBackground: false,
-              videoId: $self.data('youtube_video_id')
-            });
-        });
 
         // File input replacement
         $("input[type=file]").fileinput({
@@ -337,6 +326,10 @@
             e.stopPropagation();
         });
 
+        $('.background-video').YTPlayer({
+            fitToBackground: false,
+            videoId: 'LSmgKRx5pBo'
+        });
 
       },
       finalize: function() {

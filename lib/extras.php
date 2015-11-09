@@ -71,14 +71,6 @@ function my_login_logo() { ?>
             height: 25px !important;
             width: 320px !important;
         }
-        .wp-core-ui .button-primary {
-            background-color: #9ccc3c;
-            border-color: #9ccc3c;
-        }
-        .wp-core-ui .button-primary.focus, .wp-core-ui .button-primary.hover, .wp-core-ui .button-primary:focus, .wp-core-ui .button-primary:hover {
-            background-color: #959698;
-            border-color: #959698;
-        }
     </style>
 <?php }
 add_action( 'login_enqueue_scripts', __NAMESPACE__ . '\\my_login_logo' );
@@ -139,14 +131,14 @@ function choice_render($choice_markup, $choice, $field, $value){
  * Video background
  */
 
-add_action( 'get_header', __NAMESPACE__ . '\\page_video_bg', 9999 );
+add_action( 'get_visual', __NAMESPACE__ . '\\page_video_bg', 9999 );
 function page_video_bg(){
     global $wp_query;
     $page_ID = $wp_query->queried_object->ID;
     $prefix = 'sage_page_options_';
     $bg_image = get_post_meta( $page_ID, $prefix .'bg_image', true );
     $bg_video = get_post_meta( $page_ID, $prefix .'bg_video', true );
-    echo $bg_video ? '<div class="visual" data-youtube_video_id="'. $bg_video .'" style="background-image: url(' . $bg_image . ');"></div>' : '';
+    echo $bg_video ? '<div class="background-video" data-youtube_video_id="'. $bg_video .'" style="background-image: url(' . $bg_image . ');"></div>' : '';
 }
 
 /**
