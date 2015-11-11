@@ -136,9 +136,42 @@ function page_video_bg(){
     global $wp_query;
     $page_ID = $wp_query->queried_object->ID;
     $prefix = 'sage_page_options_';
+    $data_prefix = 'data-youtube_video_';
     $bg_image = get_post_meta( $page_ID, $prefix .'bg_image', true );
-    $bg_video = get_post_meta( $page_ID, $prefix .'bg_video', true );
-    echo $bg_video ? '<div class="background-video" data-youtube_video_id="'. $bg_video .'" style="background-image: url(' . $bg_image . ');"></div>' : '';
+
+    $shield_color = get_post_meta( $page_ID, $prefix .'bg_shield_color', true );
+    $shield_opacity = get_post_meta( $page_ID, $prefix .'bg_shield_opacity', true );
+    $video_height = get_post_meta( $page_ID, $prefix .'bg_video_height', true );
+    $video_ratio = get_post_meta( $page_ID, $prefix .'bg_video_ratio', true );
+    $video_fitbg = get_post_meta( $page_ID, $prefix .'bg_video_fitbg', true );
+    $video_repeat = get_post_meta( $page_ID, $prefix .'bg_video_repeat', true );
+    $video_mute = get_post_meta( $page_ID, $prefix .'bg_video_mute', true );
+    $video_pause = get_post_meta( $page_ID, $prefix .'bg_video_pause', true );
+    $video_start = get_post_meta( $page_ID, $prefix .'bg_video_start', true );
+    $video_id = get_post_meta( $page_ID, $prefix .'bg_video_id', true );
+
+    if($video_id) echo sprintf('<div class="background-video %s" %s style="%s"></div>%s',
+        $video_fitbg ? esc_attr('fit-background') : 'fit-container',
+        sprintf('%s %s %s %s %s %s %s',
+            $data_prefix .'id="'. esc_attr($video_id) .'"',
+            $data_prefix .'fitbg="'. esc_attr($video_fitbg) .'"',
+            $data_prefix .'ratio="'. esc_attr($video_ratio) .'"',
+            $data_prefix .'start="'. esc_attr($video_start) .'"',
+            $data_prefix .'pause="'. esc_attr($video_pause) .'"',
+            $data_prefix .'repeat="'. esc_attr($video_repeat) .'"',
+            $data_prefix .'mute="'. esc_attr($video_mute) .'"'
+        ),
+        sprintf('%s %s',
+            'background-image: url('. esc_attr($bg_image) .');',
+            'padding-bottom: '. esc_attr($video_height) .';'
+        ),
+        sprintf('<style>.ytplayer-shield{%s}</style>',
+            sprintf('%s %s',
+                'background-color: '. esc_attr($shield_color) .';',
+                'opacity: '. esc_attr($shield_opacity) .';'
+            )
+        )
+    );
 }
 
 /**

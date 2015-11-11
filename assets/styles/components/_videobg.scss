@@ -4,11 +4,34 @@
 
 .background-video {
     background-size: cover;
-    background-position: top center;
+    background-position: 50% 50%;
     background-repeat: no-repeat;
-    overflow: hidden;
     position: relative;
-    min-height: 300px;
+    overflow: hidden;
+    z-index: -1;
+
+    &.fit-background{
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+
+    &.fit-container{
+        height: 0;
+
+        .ytplayer-player {
+            top: 50% !important;
+            transform: translate3d(0,-50%,0);
+        }
+    }
+
+    &.loaded{
+        .ytplayer-container{
+            opacity: 1;
+        }
+    }
 
     video,
     source {
@@ -19,38 +42,15 @@
         position: absolute;
     }
 
-    >div:first-child{
-        z-index: -1;
-
+    .ytplayer-container{
         bottom: 0;
         height: 100%;
         left: 0;
         min-width: 100%;
-        overflow: hidden;
         position: absolute;
         right: 0;
         top: 0;
-
-    }
-    &.loaded{
-        >div:first-child{
-            z-index: 1;
-        }
-        .ytplayer-container{
-            display: block;
-        }
-    }
-
-    .ytplayer-container {
-        bottom: 0;
-        height: 100%;
-        left: 0;
-        min-width: 100%;
-        overflow: hidden;
-        position: absolute;
-        right: 0;
-        top: 0;
-        z-index: 0;
+        opacity: 0;
     }
 
     .ytplayer-shield {
@@ -59,10 +59,11 @@
         position: absolute;
         top: 0;
         width: 100%;
-        z-index: 2;
+        z-index: 1;
     }
 
     .ytplayer-player {
         position: absolute;
     }
+
 }

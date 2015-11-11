@@ -326,9 +326,29 @@
             e.stopPropagation();
         });
 
-        $('.background-video').YTPlayer({
-            fitToBackground: false,
-            videoId: 'LSmgKRx5pBo'
+        $('.background-video').each(function(){
+            var $self = $(this),
+                opts = {},
+                ratio = $self.data('youtube_video_ratio').split("/");
+
+            opts.fitbg = ($self.data('youtube_video_fitbg') === 'on') ? true : false;
+            opts.mute = ($self.data('youtube_video_mute') === 'on') ? true : false;
+            opts.pauseOnScroll = ($self.data('youtube_video_pause') === 'on') ? true : false;
+            opts.repeat = ($self.data('youtube_video_repeat') === 'on') ? true : false;
+            opts.start = $self.data('youtube_video_start');
+            opts.ratio = parseInt(ratio[0],10)/parseInt(ratio[1],10);
+            opts.videoId = $self.data('youtube_video_id');
+
+            $self.YTPlayer({
+                videoId: opts.videoId,
+                fitToBackground: opts.fitbg,
+                ratio: opts.ratio,
+                mute: opts.mute,
+                pauseOnScroll: opts.pauseOnScroll,
+                repeat: opts.repeat,
+                start: opts.start
+            });
+
         });
 
       },

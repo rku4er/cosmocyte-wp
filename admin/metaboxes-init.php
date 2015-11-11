@@ -55,9 +55,6 @@ function sage_register_general_options() {
         'context'       => 'normal',
         'priority'      => 'high',
         'show_names'    => true,
-        // 'show_on_cb' => 'sage_show_if_front_page', // function should return a bool value
-        // 'cmb_styles' => false, // false to disable the CMB stylesheet
-        // 'closed'     => true, // true to keep the metabox closed by default
     ) );
 
     $cmb_demo->add_field( array(
@@ -65,32 +62,93 @@ function sage_register_general_options() {
         'desc' => __( 'Check to hide page title', 'cmb2' ),
         'id'   => $prefix . 'hide_title',
         'type' => 'checkbox',
-        // 'repeatable' => true,
     ) );
 
     $cmb_demo->add_field( array(
         'name' => __( 'YouTube video ID', 'cmb2' ),
         'desc' => __( 'Put Youtube video id', 'cmb2' ),
-        'id'   => $prefix . 'bg_video',
-        'type' => 'text',
-        // 'repeatable' => true,
+        'id'   => $prefix . 'bg_video_id',
+        'type' => 'text_medium',
+        'default' => 'LSmgKRx5pBo',
     ) );
 
     $cmb_demo->add_field( array(
-        'name' => __( 'Background image fallback', 'cmb2' ),
+        'name' => __( 'YouTube video ratio', 'cmb2' ),
+        'desc' => __( 'Allowed format: 16/9', 'cmb2' ),
+        'id'   => $prefix . 'bg_video_ratio',
+        'type' => 'text_small',
+        'default' => '16/9'
+    ) );
+
+    $cmb_demo->add_field( array(
+        'name' => __( 'Video start', 'cmb2' ),
+        'desc' => __( 'Second in which video should begin playing at', 'cmb2' ),
+        'id'   => $prefix . 'bg_video_start',
+        'type' => 'text_small',
+        'default' => '0'
+    ) );
+
+    $cmb_demo->add_field( array(
+        'name' => __( 'Video container height', 'cmb2' ),
+        'desc' => __( 'Set height of video container', 'cmb2' ),
+        'id'   => $prefix . 'bg_video_height',
+        'type' => 'text_small',
+        'default' => '20%'
+    ) );
+
+    $cmb_demo->add_field( array(
+        'name' => __( 'Video fit to background', 'cmb2' ),
+        'desc' => __( 'Fits to background vs fitting to the container specified with width', 'cmb2' ),
+        'id'   => $prefix . 'bg_video_fitbg',
+        'type' => 'checkbox',
+        'default' => ''
+    ) );
+
+    $cmb_demo->add_field( array(
+        'name' => __( 'Video pause on scroll', 'cmb2' ),
+        'desc' => __( 'Pauses Video During Scroll to help performance', 'cmb2' ),
+        'id'   => $prefix . 'bg_video_pause',
+        'type' => 'checkbox',
+        'default' => ''
+    ) );
+
+    $cmb_demo->add_field( array(
+        'name' => __( 'Video repeat', 'cmb2' ),
+        'desc' => __( 'Loops Video', 'cmb2' ),
+        'id'   => $prefix . 'bg_video_repeat',
+        'type' => 'checkbox',
+        'default' => ''
+    ) );
+
+    $cmb_demo->add_field( array(
+        'name' => __( 'Video mute', 'cmb2' ),
+        'desc' => __( 'Mutes Youtube Video', 'cmb2' ),
+        'id'   => $prefix . 'bg_video_mute',
+        'type' => 'checkbox',
+        'default' => ''
+    ) );
+
+    $cmb_demo->add_field( array(
+        'name' => __( 'Video background fallback', 'cmb2' ),
         'desc' => __( 'Upload an image or enter an URL', 'cmb2' ),
         'id'   => $prefix . 'bg_image',
         'type' => 'file',
-        // 'repeatable' => true,
     ) );
 
     $cmb_demo->add_field( array(
-        'name'          => __( 'Background opacity', 'cmb2' ),
+        'name'          => __( 'Video shield color', 'cmb2' ),
+        'desc'          => __( 'Overlay color', 'cmb2' ),
+        'id'            => $prefix . 'bg_shield_color',
+        'type'          => 'colorpicker',
+        'default'       => 'transparent'
+    ) );
+
+    $cmb_demo->add_field( array(
+        'name'          => __( 'Video shield opacity', 'cmb2' ),
         'desc'          => __( 'Enter value from 0 to 1 eg: 0.1', 'cmb2' ),
-        'id'            => $prefix . 'bg_opacity',
+        'id'            => $prefix . 'bg_shield_opacity',
         'type'          => 'text_small',
-        'default'       => '0.3'
-        // 'repeatable' => true,
+        'default'       => '0'
     ) );
 
     $cmb_demo->add_field( array(
@@ -98,7 +156,6 @@ function sage_register_general_options() {
         'desc' => __( 'Type here your custom styles', 'cmb2' ),
         'id'   => $prefix . 'css',
         'type' => 'textarea_code',
-        // 'repeatable' => true,
     ) );
 
 }
