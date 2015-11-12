@@ -383,27 +383,14 @@ function get_container( $atts, $content = null ) {
 }
 
 /**
-  * Row
+  * Clear
   */
-add_shortcode( 'row', __NAMESPACE__.'\\get_row' );
-function get_row( $atts, $content = null ) {
+add_shortcode( 'clearfix', __NAMESPACE__.'\\get_clearfix' );
+function get_clearfix( $atts, $content = null ) {
     $defaults = array ();
     $atts = wp_parse_args( $atts, $defaults );
 
-    $html = '<div class="row">'. $content .'</div>';
-
-    return do_shortcode($html);
-}
-
-/**
-  * Column
-  */
-add_shortcode( 'column', __NAMESPACE__.'\\get_column' );
-function get_column( $atts, $content = null ) {
-    $defaults = array ();
-    $atts = wp_parse_args( $atts, $defaults );
-
-    $html = '<div class="column">'. $content .'</div>';
+    $html = '<div class="clearfix"></div>';
 
     return do_shortcode($html);
 }
@@ -427,48 +414,75 @@ function get_parallax_section( $atts, $content = null ) {
         $content
     );
 
+    //$html = sprintf('<div class="%s col-xs-12" style="background-color: %s; background-image: url(%s); z-index: %s; %s" data-ride="parallax" data-direction="%s" data-speed="%s"></div>',
+        //esc_attr($atts['class']),
+        //esc_attr($atts['bg-color']),
+        //esc_attr($atts['src']),
+        //esc_attr($atts['index']),
+        //esc_attr('margin-top: ' . $atts['offset'] . 'vh;'),
+        //esc_attr($atts['direction']),
+        //esc_attr($atts['speed'])
+    //);
+
     return do_shortcode($html);
 }
 
 /**
-  * Parallax Layer
+  *
   */
-add_shortcode( 'parallax_layer', __NAMESPACE__.'\\get_parallax_layer' );
-function get_parallax_layer( $atts, $content = null ) {
+add_shortcode( 'background_video', __NAMESPACE__.'\\get_background_video' );
+function get_background_video( $atts, $content = null ) {
     $defaults = array (
-        'class'       => 'parallax-layer',
-        'bg-color'    => 'transparent',
-        'direction'   => 'bottom',
-        'offset'      => '0px',
-        'index'       => 'auto',
-        'speed'       => '100',
-        'src'         => ''
+        'id' => '1'
     );
     $atts = wp_parse_args( $atts, $defaults );
 
-    $html = sprintf('<div class="%s col-xs-12" style="background-color: %s; background-image: url(%s); z-index: %s; %s" data-ride="parallax" data-direction="%s" data-speed="%s"></div>',
-        esc_attr($atts['class']),
-        esc_attr($atts['bg-color']),
-        esc_attr($atts['src']),
-        esc_attr($atts['index']),
-        esc_attr('margin-top: ' . $atts['offset'] . ';'),
-        esc_attr($atts['direction']),
-        esc_attr($atts['speed'])
-    );
+    global $wp_query;
+    $page_ID = $wp_query->queried_object->ID;
 
-    return do_shortcode($html);
+    $prefix = 'sage_background_video_';
+    $videos = get_post_meta( $page_ID, $prefix .'group', true );
+    $section_id = $atts['id'] -1;
+    $video = $videos[$section_id];
+
+    if($video){
+        $fallback_image = $video[$prefix .'fallback_image'];
+        $shield_color = $video[$prefix .'shield_color'];
+        $shield_opacity = $video[$prefix .'shield_opacity'];
+        $height = $video[$prefix .'height'];
+        $ratio = $video[$prefix .'ratio'];
+        $fitbg = $video[$prefix .'fitbg'];
+        $repeat = $video[$prefix .'repeat'];
+        $mute = $video[$prefix .'mute'];
+        $pause = $video[$prefix .'pause'];
+        $start = $video[$prefix .'start'];
+        $id = $video[$prefix .'id'];
+
+        $data_pref = 'data-youtube_video_';
+
+        if($id) return sprintf('<div id="%s" class="background-video row %s" %s style="%s">%s</div>%s',
+            'background-video-'. $atts['id'],
+            $fitbg ? esc_attr('fit-background') : 'fit-container',
+            sprintf('%s %s %s %s %s %s %s',
+                $data_pref .'id="'. esc_attr($id) .'"',
+                $data_pref .'fitbg="'. esc_attr($fitbg) .'"',
+                $data_pref .'ratio="'. esc_attr($ratio) .'"',
+                $data_pref .'start="'. esc_attr($start) .'"',
+                $data_pref .'pause="'. esc_attr($pause) .'"',
+                $data_pref .'repeat="'. esc_attr($repeat) .'"',
+                $data_pref .'mute="'. esc_attr($mute) .'"'
+            ),
+            sprintf('%s %s',
+                'background-image: url('. esc_attr($fallback_image) .');',
+                'padding-bottom: '. esc_attr($height) .';'
+            ),
+            do_shortcode($content),
+            sprintf('<style>.ytplayer-shield{%s}</style>',
+                sprintf('%s %s',
+                    'background-color: '. esc_attr($shield_color) .';',
+                    'opacity: '. esc_attr($shield_opacity) .';'
+                )
+            )
+        );
+    }
 }
-
-/**
-  * Clear
-  */
-add_shortcode( 'clearfix', __NAMESPACE__.'\\get_clearfix' );
-function get_clearfix( $atts, $content = null ) {
-    $defaults = array ();
-    $atts = wp_parse_args( $atts, $defaults );
-
-    $html = '<div class="clearfix"></div>';
-
-    return do_shortcode($html);
-}
-

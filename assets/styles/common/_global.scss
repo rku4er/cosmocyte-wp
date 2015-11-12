@@ -53,7 +53,6 @@ body {
     /*content offset */
     >.inner{
         padding-top: 78px;
-        padding-bottom: $grid-gutter-width;
         padding-left: 0;
         padding-right: 0;
 
@@ -69,6 +68,13 @@ body {
     }
 }
 
+/*
+ * Reset .main position
+ */
+.main{
+    position: static !important;
+}
+
 /*content offsets*/
 .main >.container{
      padding-top: $grid-gutter-width;
@@ -82,4 +88,5 @@ body {
 .list-group-item{
     transition: background-color 0.1s ease-in-out;
 }
+
 

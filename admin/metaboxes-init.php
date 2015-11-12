@@ -46,12 +46,12 @@ function sage_register_general_options() {
     $prefix = 'sage_page_options_';
 
     /**
-     * Sample metabox to demonstrate each field type included
+     * General options
      */
     $cmb_demo = new_cmb2_box( array(
         'id'            => $prefix . 'metabox',
         'title'         => __( 'General', 'cmb2' ),
-        'object_types'  => array( 'page', ),
+        'object_types'  => array( 'page', 'post', 'animations', 'interactive'),
         'context'       => 'normal',
         'priority'      => 'high',
         'show_names'    => true,
@@ -65,93 +65,6 @@ function sage_register_general_options() {
     ) );
 
     $cmb_demo->add_field( array(
-        'name' => __( 'YouTube video ID', 'cmb2' ),
-        'desc' => __( 'Put Youtube video id', 'cmb2' ),
-        'id'   => $prefix . 'bg_video_id',
-        'type' => 'text_medium',
-        'default' => 'LSmgKRx5pBo',
-    ) );
-
-    $cmb_demo->add_field( array(
-        'name' => __( 'YouTube video ratio', 'cmb2' ),
-        'desc' => __( 'Allowed format: 16/9', 'cmb2' ),
-        'id'   => $prefix . 'bg_video_ratio',
-        'type' => 'text_small',
-        'default' => '16/9'
-    ) );
-
-    $cmb_demo->add_field( array(
-        'name' => __( 'Video start', 'cmb2' ),
-        'desc' => __( 'Second in which video should begin playing at', 'cmb2' ),
-        'id'   => $prefix . 'bg_video_start',
-        'type' => 'text_small',
-        'default' => '0'
-    ) );
-
-    $cmb_demo->add_field( array(
-        'name' => __( 'Video container height', 'cmb2' ),
-        'desc' => __( 'Set height of video container', 'cmb2' ),
-        'id'   => $prefix . 'bg_video_height',
-        'type' => 'text_small',
-        'default' => '20%'
-    ) );
-
-    $cmb_demo->add_field( array(
-        'name' => __( 'Video fit to background', 'cmb2' ),
-        'desc' => __( 'Fits to background vs fitting to the container specified with width', 'cmb2' ),
-        'id'   => $prefix . 'bg_video_fitbg',
-        'type' => 'checkbox',
-        'default' => ''
-    ) );
-
-    $cmb_demo->add_field( array(
-        'name' => __( 'Video pause on scroll', 'cmb2' ),
-        'desc' => __( 'Pauses Video During Scroll to help performance', 'cmb2' ),
-        'id'   => $prefix . 'bg_video_pause',
-        'type' => 'checkbox',
-        'default' => ''
-    ) );
-
-    $cmb_demo->add_field( array(
-        'name' => __( 'Video repeat', 'cmb2' ),
-        'desc' => __( 'Loops Video', 'cmb2' ),
-        'id'   => $prefix . 'bg_video_repeat',
-        'type' => 'checkbox',
-        'default' => ''
-    ) );
-
-    $cmb_demo->add_field( array(
-        'name' => __( 'Video mute', 'cmb2' ),
-        'desc' => __( 'Mutes Youtube Video', 'cmb2' ),
-        'id'   => $prefix . 'bg_video_mute',
-        'type' => 'checkbox',
-        'default' => ''
-    ) );
-
-    $cmb_demo->add_field( array(
-        'name' => __( 'Video background fallback', 'cmb2' ),
-        'desc' => __( 'Upload an image or enter an URL', 'cmb2' ),
-        'id'   => $prefix . 'bg_image',
-        'type' => 'file',
-    ) );
-
-    $cmb_demo->add_field( array(
-        'name'          => __( 'Video shield color', 'cmb2' ),
-        'desc'          => __( 'Overlay color', 'cmb2' ),
-        'id'            => $prefix . 'bg_shield_color',
-        'type'          => 'colorpicker',
-        'default'       => 'transparent'
-    ) );
-
-    $cmb_demo->add_field( array(
-        'name'          => __( 'Video shield opacity', 'cmb2' ),
-        'desc'          => __( 'Enter value from 0 to 1 eg: 0.1', 'cmb2' ),
-        'id'            => $prefix . 'bg_shield_opacity',
-        'type'          => 'text_small',
-        'default'       => '0'
-    ) );
-
-    $cmb_demo->add_field( array(
         'name' => __( 'Page specific CSS', 'cmb2' ),
         'desc' => __( 'Type here your custom styles', 'cmb2' ),
         'id'   => $prefix . 'css',
@@ -160,7 +73,213 @@ function sage_register_general_options() {
 
 }
 
+add_action( 'cmb2_init', __NAMESPACE__ . '\\sage_register_background_video' );
+/**
+ * Hook in and add a demo metabox. Can only happen on the 'cmb2_init' hook.
+ */
+function sage_register_background_video() {
+
+    $prefix = 'sage_background_video_';
+
+    $cmb_group = new_cmb2_box( array(
+        'id'           => $prefix . 'metabox',
+        'title'        => __( 'Background Video Options', 'cmb2' ),
+        'object_types' => array( 'page', 'post', 'animations', 'interactive'),
+    ) );
+
+    // $group_field_id is the field id string, so in this case: $prefix . 'demo'
+    $group_field_id = $cmb_group->add_field( array(
+        'id'          => $prefix . 'group',
+        'type'        => 'group',
+        'description' => __( 'Here you can add background video sections to the page.', 'cmb2' ),
+        'options'     => array(
+            'group_title'   => __( 'Section {#}', 'cmb2' ), // {#} gets replaced by row number
+            'add_button'    => __( 'Add Another Section', 'cmb2' ),
+            'remove_button' => __( 'Remove Section', 'cmb2' ),
+            'sortable'      => true, // beta
+            'closed'     => true, // true to have the groups closed by default
+        ),
+    ) );
+
+    $cmb_group->add_group_field( $group_field_id, array(
+        'name' => __( 'Video ID', 'cmb2' ),
+        'desc' => __( 'Put Youtube video id', 'cmb2' ),
+        'id'   => 'id',
+        'type' => 'text_medium',
+        'default' => '',
+    ) );
+
+    $cmb_group->add_group_field( $group_field_id, array(
+        'name' => __( 'Ratio', 'cmb2' ),
+        'desc' => __( 'Allowed format: 16/9', 'cmb2' ),
+        'id'   => 'ratio',
+        'type' => 'text_small',
+        'default' => '16/9'
+    ) );
+
+    $cmb_group->add_group_field( $group_field_id, array(
+        'name' => __( 'Start', 'cmb2' ),
+        'desc' => __( 'Second in which video should begin playing at', 'cmb2' ),
+        'id'   => 'start',
+        'type' => 'text_small',
+        'default' => '0'
+    ) );
+
+    $cmb_group->add_group_field( $group_field_id, array(
+        'name' => __( 'Height', 'cmb2' ),
+        'desc' => __( 'Set height of video container', 'cmb2' ),
+        'id'   => 'height',
+        'type' => 'text_small',
+        'default' => '20%'
+    ) );
+
+    $cmb_group->add_group_field( $group_field_id, array(
+        'name' => __( 'Fit to background', 'cmb2' ),
+        'desc' => __( 'Fits to background vs fitting to the container specified with width', 'cmb2' ),
+        'id'   => 'fitbg',
+        'type' => 'checkbox',
+        'default' => ''
+    ) );
+
+    $cmb_group->add_group_field( $group_field_id, array(
+        'name' => __( 'Pause on scroll', 'cmb2' ),
+        'desc' => __( 'Pauses Video During Scroll to help performance', 'cmb2' ),
+        'id'   => 'pause',
+        'type' => 'checkbox',
+        'default' => ''
+    ) );
+
+    $cmb_group->add_group_field( $group_field_id, array(
+        'name' => __( 'Repeat', 'cmb2' ),
+        'desc' => __( 'Loops Video', 'cmb2' ),
+        'id'   => 'repeat',
+        'type' => 'checkbox',
+        'default' => 'on'
+    ) );
+
+    $cmb_group->add_group_field( $group_field_id, array(
+        'name' => __( 'Mute', 'cmb2' ),
+        'desc' => __( 'Mutes Youtube Video', 'cmb2' ),
+        'id'   => 'mute',
+        'type' => 'checkbox',
+        'default' => 'on'
+    ) );
+
+    $cmb_group->add_group_field( $group_field_id, array(
+        'name' => __( 'Video background fallback', 'cmb2' ),
+        'desc' => __( 'Upload an image or enter an URL', 'cmb2' ),
+        'id'   => 'fallback_image',
+        'type' => 'file',
+    ) );
+
+    $cmb_group->add_group_field( $group_field_id, array(
+        'name'          => __( 'Video shield color', 'cmb2' ),
+        'desc'          => __( 'Overlay color', 'cmb2' ),
+        'id'            => 'shield_color',
+        'type'          => 'colorpicker',
+        'default'       => 'transparent'
+    ) );
+
+    $cmb_group->add_group_field( $group_field_id, array(
+        'name'          => __( 'Video shield opacity', 'cmb2' ),
+        'desc'          => __( 'Enter value from 0 to 1 eg: 0.1', 'cmb2' ),
+        'id'            => 'shield_opacity',
+        'type'          => 'text_small',
+        'default'       => ''
+    ) );
+}
+
+add_action( 'cmb2_init', __NAMESPACE__ . '\\sage_register_parallax' );
+/**
+ * Hook in and add a demo metabox. Can only happen on the 'cmb2_init' hook.
+ */
+function sage_register_parallax() {
+
+    $prefix = 'sage_parallax_';
+
+    $cmb_group = new_cmb2_box( array(
+        'id'           => $prefix . 'metabox',
+        'title'        => __( 'Parallax Options', 'cmb2' ),
+        'object_types' => array( 'page', 'post', 'animations', 'interactive'),
+    ) );
+
+    $cmb_group->add_field( array(
+        'name'    => __( 'Ratio', 'cmb2' ),
+        'desc'    => __( 'Select section height.', 'cmb2' ),
+        'id'      => $prefix . 'ratio',
+        'type'    => 'text_small',
+        'default' => '25%'
+    ) );
+
+    // $group_field_id is the field id string, so in this case: $prefix . 'demo'
+    $group_field_id = $cmb_group->add_field( array(
+        'id'          => $prefix . 'group',
+        'type'        => 'group',
+        'description' => __( 'Here you can add parallax sections to the page.', 'cmb2' ),
+        'options'     => array(
+            'group_title'   => __( 'Layer {#}', 'cmb2' ), // {#} gets replaced by row number
+            'add_button'    => __( 'Add Another Layer', 'cmb2' ),
+            'remove_button' => __( 'Remove Layer', 'cmb2' ),
+            'sortable'      => true, // beta
+            'closed'     => true, // true to have the groups closed by default
+        ),
+    ) );
+
+    $cmb_group->add_group_field( $group_field_id, array(
+        'name' => __( 'Background image', 'cmb2' ),
+        'desc' => __( 'Upload an image or enter an URL', 'cmb2' ),
+        'id'   => 'background_image',
+        'type' => 'file',
+    ) );
+
+    $cmb_group->add_group_field( $group_field_id, array(
+        'name' => __( 'Background color', 'cmb2' ),
+        'desc' => __( 'Choose background color', 'cmb2' ),
+        'id'   => 'background_color',
+        'type' => 'colorpicker',
+        'default' => 'transparent'
+    ) );
+
+    $cmb_group->add_group_field( $group_field_id, array(
+        'name' => __( 'Direction', 'cmb2' ),
+        'desc' => __( 'Set layer moving direction: top or bottom', 'cmb2' ),
+        'id'   => 'direction',
+        'type' => 'select',
+        'default'          => 'top',
+        'options'          => array(
+            'top'      => __( 'Top', 'cmb' ),
+            'bottom'   => __( 'Bottom', 'cmb' ),
+        ),
+    ) );
+
+    $cmb_group->add_group_field( $group_field_id, array(
+        'name' => __( 'Speed', 'cmb2' ),
+        'desc' => __( 'Set layer moving speed between 0 and 100.', 'cmb2' ),
+        'id'   => 'speed',
+        'type' => 'text_small',
+        'default' => '10',
+    ) );
+
+    $cmb_group->add_group_field( $group_field_id, array(
+        'name' => __( 'Top offset', 'cmb2' ),
+        'desc' => __( 'Set layer top offset in vh(Viewport Height). Integer', 'cmb2' ),
+        'id'   => 'offset',
+        'type' => 'text_small',
+        'default' => ''
+    ) );
+
+    $cmb_group->add_group_field( $group_field_id, array(
+        'name' => __( 'CSS z-index', 'cmb2' ),
+        'desc' => __( 'Set layer index. Integer or auto', 'cmb2' ),
+        'id'   => 'z_index',
+        'type' => 'text_small',
+        'default' => ''
+    ) );
+
+}
+
 add_action( 'cmb2_init', __NAMESPACE__ . '\\sage_register_slider_options' );
+
 /**
  * Hook in and add a metabox to demonstrate repeatable grouped fields
  */
@@ -252,7 +371,7 @@ function sage_register_slider_options() {
     $cmb_group = new_cmb2_box( array(
         'id'           => $prefix . 'metabox',
         'title'        => __( 'Slider Options', 'cmb2' ),
-        'object_types' => array( 'page', ),
+        'object_types' => array( 'page', 'post', 'animations', 'interactive'),
     ) );
 
     $cmb_group->add_field( array(
@@ -342,7 +461,7 @@ function sage_register_slider_options() {
     $group_field_id = $cmb_group->add_field( array(
         'id'          => $prefix . 'group',
         'type'        => 'group',
-        'description' => __( 'Here you can add slides to the slider. Please take [slider] shortcode and insert it wherever you want.', 'cmb2' ),
+        'description' => __( 'Here you can add slides to the slider. Use [slider] shortcode', 'cmb2' ),
         'options'     => array(
             'group_title'   => __( 'Slide {#}', 'cmb2' ), // {#} gets replaced by row number
             'add_button'    => __( 'Add Another Slide', 'cmb2' ),

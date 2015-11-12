@@ -1,0 +1,24 @@
+/*Parallax section*/
+.parallax-section{
+    position: relative; 
+    height: 0;
+}
+.parallax-inner{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    overflow: hidden;
+}
+.parallax-layer{
+    top: -50%;
+    left: 0;
+    right: 0;
+    height: 200%;
+    position: absolute;
+    background-repeat: no-repeat; 
+    background-size: cover;
+    background-position: 50% 0;
+    will-change: transform;
+}

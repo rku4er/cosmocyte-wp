@@ -68,7 +68,7 @@ function my_login_logo() { ?>
             background-size: contain;
         }
         .login h1 a {
-            height: 25px !important;
+            height: 62px !important;
             width: 320px !important;
         }
     </style>
@@ -126,105 +126,3 @@ function choice_render($choice_markup, $choice, $field, $value){
     }
     return $choice_markup;
 }
-
-/**
- * Video background
- */
-
-add_action( 'get_visual', __NAMESPACE__ . '\\page_video_bg', 9999 );
-function page_video_bg(){
-    global $wp_query;
-    $page_ID = $wp_query->queried_object->ID;
-    $prefix = 'sage_page_options_';
-    $data_prefix = 'data-youtube_video_';
-    $bg_image = get_post_meta( $page_ID, $prefix .'bg_image', true );
-
-    $shield_color = get_post_meta( $page_ID, $prefix .'bg_shield_color', true );
-    $shield_opacity = get_post_meta( $page_ID, $prefix .'bg_shield_opacity', true );
-    $video_height = get_post_meta( $page_ID, $prefix .'bg_video_height', true );
-    $video_ratio = get_post_meta( $page_ID, $prefix .'bg_video_ratio', true );
-    $video_fitbg = get_post_meta( $page_ID, $prefix .'bg_video_fitbg', true );
-    $video_repeat = get_post_meta( $page_ID, $prefix .'bg_video_repeat', true );
-    $video_mute = get_post_meta( $page_ID, $prefix .'bg_video_mute', true );
-    $video_pause = get_post_meta( $page_ID, $prefix .'bg_video_pause', true );
-    $video_start = get_post_meta( $page_ID, $prefix .'bg_video_start', true );
-    $video_id = get_post_meta( $page_ID, $prefix .'bg_video_id', true );
-
-    if($video_id) echo sprintf('<div class="background-video %s" %s style="%s"></div>%s',
-        $video_fitbg ? esc_attr('fit-background') : 'fit-container',
-        sprintf('%s %s %s %s %s %s %s',
-            $data_prefix .'id="'. esc_attr($video_id) .'"',
-            $data_prefix .'fitbg="'. esc_attr($video_fitbg) .'"',
-            $data_prefix .'ratio="'. esc_attr($video_ratio) .'"',
-            $data_prefix .'start="'. esc_attr($video_start) .'"',
-            $data_prefix .'pause="'. esc_attr($video_pause) .'"',
-            $data_prefix .'repeat="'. esc_attr($video_repeat) .'"',
-            $data_prefix .'mute="'. esc_attr($video_mute) .'"'
-        ),
-        sprintf('%s %s',
-            'background-image: url('. esc_attr($bg_image) .');',
-            'padding-bottom: '. esc_attr($video_height) .';'
-        ),
-        sprintf('<style>.ytplayer-shield{%s}</style>',
-            sprintf('%s %s',
-                'background-color: '. esc_attr($shield_color) .';',
-                'opacity: '. esc_attr($shield_opacity) .';'
-            )
-        )
-    );
-}
-
-/**
- * Add page specific CSS
- */
-add_action( 'get_footer', __NAMESPACE__ . '\\page_specific_css', 9999 );
-function page_specific_css(){
-    global $wp_query;
-    $page_ID = $wp_query->queried_object->ID;
-    $prefix = 'sage_page_options_';
-    $page_css = get_post_meta( $page_ID, $prefix .'css', true );
-    echo $page_css ? '<style>' . $page_css . '</style>' : '';
-}
-
-
-/**
- * Custom HTML
- */
-add_action( 'get_header', __NAMESPACE__ . '\\custom_html', 999 );
-function custom_html(){
-    global $redux_demo;
-    $editor_content = $redux_demo['custom-html-editor'];
-    echo $editor_content ? $editor_content : '';
-}
-/**
- * Custom CSS
- */
-add_action( 'get_header', __NAMESPACE__ . '\\custom_css', 999 );
-function custom_css(){
-    global $redux_demo;
-    $editor_content = $redux_demo['custom-css-editor'];
-    echo $editor_content ? '<style>'. $editor_content .'</style>' : '';
-}
-
-/**
- * Custom JS
- */
-add_action( 'get_footer', __NAMESPACE__ . '\\custom_js', 999 );
-function custom_js(){
-    global $redux_demo;
-    $editor_content = $redux_demo['custom-js-editor'];
-    echo $editor_content ? '<script>'. $editor_content .'</script>' : '';
-}
-
-
-/**
- *  Favicon
- */
-add_action('wp_head', __NAMESPACE__ . '\\site_favicon');
-function site_favicon() {
-    global $redux_demo;
-    $options = $redux_demo;
-    $favicon = $options['favicon']['url'] ? $options['favicon']['url'] : get_template_directory_uri().'/dist/images/favicon.ico';
-    echo '<link rel="shortcut icon" href="'. $favicon .'">';
-}
-
