@@ -36,10 +36,10 @@ function sage_show_if_front_page( $cmb ) {
     return true;
 }
 
-add_action( 'cmb2_init', __NAMESPACE__ . '\\sage_register_general_options' );
 /**
- * Hook in and add a demo metabox. Can only happen on the 'cmb2_init' hook.
+ * General Options Metabox
  */
+add_action( 'cmb2_init', __NAMESPACE__ . '\\sage_register_general_options' );
 function sage_register_general_options() {
 
     // Start with an underscore to hide fields from custom fields list
@@ -73,17 +73,80 @@ function sage_register_general_options() {
 
 }
 
-add_action( 'cmb2_init', __NAMESPACE__ . '\\sage_register_background_video' );
 /**
- * Hook in and add a demo metabox. Can only happen on the 'cmb2_init' hook.
+ * Case Studies Metabox
  */
+add_action( 'cmb2_init', __NAMESPACE__ . '\\sage_register_case_studies' );
+function sage_register_case_studies() {
+
+    // Start with an underscore to hide fields from custom fields list
+    $prefix = 'sage_case_studies_';
+
+    /**
+     * Case Studies
+     */
+    $cmb_group = new_cmb2_box( array(
+        'id'            => $prefix . 'metabox',
+        'title'         => __( 'Case Studies', 'cmb2' ),
+        'object_types'  => array( 'page', 'post', 'animations', 'interactive'),
+        'context'       => 'normal',
+        'priority'      => 'high',
+        'show_names'    => true,
+    ) );
+
+    $cmb_group->add_field( array(
+        'name'             => 'Section Title',
+        'id'               => $prefix . 'title',
+        'type'             => 'text'
+    ) );
+
+    $cmb_group->add_field( array(
+        'name'             => 'Custom Post Select',
+        'desc'             => 'Select an option',
+        'id'               => $prefix . 'posts',
+        'type'             => 'multicheck',
+        'options'          => sage_get_custom_posts(array('interactive', 'animations'))
+    ) );
+
+    $cmb_group->add_field( array(
+        'name'             => 'Button URL',
+        'id'               => $prefix . 'url',
+        'type'             => 'text'
+    ) );
+
+}
+
+function sage_get_custom_posts($post_types){
+    $args=array(
+      'post_type' => $post_types,
+      'post_status' => 'publish',
+      'posts_per_page' => -1
+    );
+
+    $custom_posts = get_posts($args);
+
+    if( $custom_posts ) {
+      $posts_arr = array();
+
+      foreach($custom_posts as $post ):
+        $posts_arr[$post->ID] = __($post->post_title, 'sage');
+      endforeach;
+
+      return $posts_arr;
+    }
+}
+
+/**
+ * Background Video Metabox
+ */
+add_action( 'cmb2_init', __NAMESPACE__ . '\\sage_register_background_video' );
 function sage_register_background_video() {
 
     $prefix = 'sage_background_video_';
 
     $cmb_group = new_cmb2_box( array(
         'id'           => $prefix . 'metabox',
-        'title'        => __( 'Background Video Options', 'cmb2' ),
+        'title'        => __( 'Background Video', 'cmb2' ),
         'object_types' => array( 'page', 'post', 'animations', 'interactive'),
     ) );
 
@@ -134,6 +197,14 @@ function sage_register_background_video() {
     ) );
 
     $cmb_group->add_group_field( $group_field_id, array(
+        'name' => __( 'Expand to content', 'cmb2' ),
+        'desc' => __( 'Expand to content vs fixed height value', 'cmb2' ),
+        'id'   => 'expand',
+        'type' => 'checkbox',
+        'default' => ''
+    ) );
+
+    $cmb_group->add_group_field( $group_field_id, array(
         'name' => __( 'Fit to background', 'cmb2' ),
         'desc' => __( 'Fits to background vs fitting to the container specified with width', 'cmb2' ),
         'id'   => 'fitbg',
@@ -154,7 +225,7 @@ function sage_register_background_video() {
         'desc' => __( 'Loops Video', 'cmb2' ),
         'id'   => 'repeat',
         'type' => 'checkbox',
-        'default' => 'on'
+        'default' => ''
     ) );
 
     $cmb_group->add_group_field( $group_field_id, array(
@@ -162,7 +233,15 @@ function sage_register_background_video() {
         'desc' => __( 'Mutes Youtube Video', 'cmb2' ),
         'id'   => 'mute',
         'type' => 'checkbox',
-        'default' => 'on'
+        'default' => ''
+    ) );
+
+    $cmb_group->add_group_field( $group_field_id, array(
+        'name' => __( 'Show controls', 'cmb2' ),
+        'desc' => __( 'Enable player controls', 'cmb2' ),
+        'id'   => 'controls',
+        'type' => 'checkbox',
+        'default' => ''
     ) );
 
     $cmb_group->add_group_field( $group_field_id, array(
@@ -199,16 +278,16 @@ function sage_register_parallax() {
 
     $cmb_group = new_cmb2_box( array(
         'id'           => $prefix . 'metabox',
-        'title'        => __( 'Parallax Options', 'cmb2' ),
+        'title'        => __( 'Parallax', 'cmb2' ),
         'object_types' => array( 'page', 'post', 'animations', 'interactive'),
     ) );
 
     $cmb_group->add_field( array(
-        'name'    => __( 'Ratio', 'cmb2' ),
+        'name'    => __( 'Height', 'cmb2' ),
         'desc'    => __( 'Select section height.', 'cmb2' ),
-        'id'      => $prefix . 'ratio',
+        'id'      => $prefix . 'height',
         'type'    => 'text_small',
-        'default' => '25%'
+        'default' => '20%'
     ) );
 
     // $group_field_id is the field id string, so in this case: $prefix . 'demo'
@@ -233,19 +312,11 @@ function sage_register_parallax() {
     ) );
 
     $cmb_group->add_group_field( $group_field_id, array(
-        'name' => __( 'Background color', 'cmb2' ),
-        'desc' => __( 'Choose background color', 'cmb2' ),
-        'id'   => 'background_color',
-        'type' => 'colorpicker',
-        'default' => 'transparent'
-    ) );
-
-    $cmb_group->add_group_field( $group_field_id, array(
         'name' => __( 'Direction', 'cmb2' ),
         'desc' => __( 'Set layer moving direction: top or bottom', 'cmb2' ),
         'id'   => 'direction',
         'type' => 'select',
-        'default'          => 'top',
+        'default'          => 'bottom',
         'options'          => array(
             'top'      => __( 'Top', 'cmb' ),
             'bottom'   => __( 'Bottom', 'cmb' ),
@@ -258,14 +329,6 @@ function sage_register_parallax() {
         'id'   => 'speed',
         'type' => 'text_small',
         'default' => '10',
-    ) );
-
-    $cmb_group->add_group_field( $group_field_id, array(
-        'name' => __( 'Top offset', 'cmb2' ),
-        'desc' => __( 'Set layer top offset in vh(Viewport Height). Integer', 'cmb2' ),
-        'id'   => 'offset',
-        'type' => 'text_small',
-        'default' => ''
     ) );
 
     $cmb_group->add_group_field( $group_field_id, array(
@@ -370,7 +433,7 @@ function sage_register_slider_options() {
      */
     $cmb_group = new_cmb2_box( array(
         'id'           => $prefix . 'metabox',
-        'title'        => __( 'Slider Options', 'cmb2' ),
+        'title'        => __( 'Slider', 'cmb2' ),
         'object_types' => array( 'page', 'post', 'animations', 'interactive'),
     ) );
 

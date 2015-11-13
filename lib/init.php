@@ -31,6 +31,7 @@ function setup() {
   // http://codex.wordpress.org/Function_Reference/add_image_size
   add_theme_support('post-thumbnails');
   add_image_size('slider', 1200, 600, true);
+  add_image_size('case_studies', 300, 300, true);
   //update_option( 'medium_crop', 1 ); //Turn on image crop at medium size
 
   // Add post formats
@@ -55,6 +56,8 @@ function setup() {
     }
     return $title;
   } );
+
+  //remove_filter( 'the_content', 'wpautop' );
 
 }
 add_action('after_setup_theme', __NAMESPACE__ . '\\setup');

@@ -185,7 +185,7 @@
                 $('.carousel-inline[data-type="parallax"]').each(function(){
                     var $self = $(this);
                     var offset = $self.offset();
-                    $self.find('.item').css('background-position', '50% '+ (offset.top - $(window).scrollTop()/10) + 'px');
+                    $self.find('.item').css('background-position', '50% '+ (offset.top - $(window).scrollTop())/10 + 'px');
                 });
             }
           };
@@ -329,15 +329,17 @@
         $('.background-video').each(function(){
             var $self = $(this),
                 opts = {},
-                ratio = $self.data('youtube_video_ratio').split("/");
+                prefix = 'youtube_video_',
+                ratio = $self.data(prefix + 'ratio').split("/");
 
-            opts.fitbg = ($self.data('youtube_video_fitbg') === 'on') ? true : false;
-            opts.mute = ($self.data('youtube_video_mute') === 'on') ? true : false;
-            opts.pauseOnScroll = ($self.data('youtube_video_pause') === 'on') ? true : false;
-            opts.repeat = ($self.data('youtube_video_repeat') === 'on') ? true : false;
-            opts.start = $self.data('youtube_video_start');
+            opts.controls = ($self.data(prefix + 'controls') === 'on') ? 1 : 0;
+            opts.fitbg = ($self.data(prefix + 'fitbg') === 'on') ? 1 : 0;
+            opts.mute = ($self.data(prefix + 'mute') === 'on') ? 1 : 0;
+            opts.pauseOnScroll = ($self.data(prefix + 'pause') === 'on') ? 1 : 0;
+            opts.repeat = ($self.data(prefix + 'repeat') === 'on') ? 1 : 0;
+            opts.start = $self.data(prefix + 'start');
+            opts.videoId = $self.data(prefix + 'id');
             opts.ratio = parseInt(ratio[0],10)/parseInt(ratio[1],10);
-            opts.videoId = $self.data('youtube_video_id');
 
             $self.YTPlayer({
                 videoId: opts.videoId,
@@ -346,7 +348,10 @@
                 mute: opts.mute,
                 pauseOnScroll: opts.pauseOnScroll,
                 repeat: opts.repeat,
-                start: opts.start
+                start: opts.start,
+                playerVars: {
+                  controls: opts.controls
+                }
             });
 
         });

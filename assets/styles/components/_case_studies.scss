@@ -1,0 +1,22 @@
+.case-studies{
+    .inner{
+        display: table;
+        table-layout: fixed;
+        width: 100%;
+    }
+    .title{
+        color: inherit;
+    }
+    .case-study{
+        display: table-cell;
+        vertical-align: top;
+        padding: 10px;
+        font-size: 14px;
+
+        img{
+            max-width: 100%;
+            display: block;
+            margin-bottom: 1em;
+        }
+    }
+}

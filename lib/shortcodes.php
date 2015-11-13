@@ -2,6 +2,7 @@
 
 namespace Roots\Sage\Shortcodes;
 use Roots\Sage\Utils;
+use Roots\Sage\Extras;
 
 /**
  * Slider shortcode
@@ -212,13 +213,8 @@ function socials_init( $attr ){
 }
 
 /**
+  * Vertical Tabs
   *
-  * bs_tabs
-  *
-  * @author Filip Stefansson
-  * @since 1.0
-  * Modified by TwItCh twitch@designweapon.com
-  * Now acts a whole nav/tab/pill shortcode solution!
   */
 add_shortcode( 'tabs_vertical', __NAMESPACE__.'\\bs_tabs_vertical' );
 function bs_tabs_vertical( $atts, $content = null ) {
@@ -398,37 +394,74 @@ function get_clearfix( $atts, $content = null ) {
 /**
   * Parallax Section
   */
-add_shortcode( 'parallax_section', __NAMESPACE__.'\\get_parallax_section' );
+add_shortcode( 'parallax', __NAMESPACE__.'\\get_parallax_section' );
 function get_parallax_section( $atts, $content = null ) {
     $defaults = array (
-        'class'       => 'parallax-section',
-        'bg-color'    => 'transparent',
-        'ratio'       => '5'
+        'section_class'   => 'parallax-section',
+        'inner_class'     => 'parallax-inner',
+        'layer_class'     => 'parallax-layer'
     );
     $atts = wp_parse_args( $atts, $defaults );
 
-    $html = sprintf('<div class="%s row" style="background-color: %s; padding-bottom: %s;"><div class="parallax-inner">%s</div></div>',
-        esc_attr($atts['class']),
-        esc_attr($atts['bg-color']),
-        100 / esc_attr($atts['ratio']) . '%',
-        $content
-    );
+    global $wp_query;
+    $page_ID = $wp_query->queried_object->ID;
 
-    //$html = sprintf('<div class="%s col-xs-12" style="background-color: %s; background-image: url(%s); z-index: %s; %s" data-ride="parallax" data-direction="%s" data-speed="%s"></div>',
-        //esc_attr($atts['class']),
-        //esc_attr($atts['bg-color']),
-        //esc_attr($atts['src']),
-        //esc_attr($atts['index']),
-        //esc_attr('margin-top: ' . $atts['offset'] . 'vh;'),
-        //esc_attr($atts['direction']),
-        //esc_attr($atts['speed'])
-    //);
+    $prefix = 'sage_parallax_';
+    $data_pref = 'data-youtube_video_';
+    $parallax_height = get_post_meta( $page_ID, $prefix .'height', true );
+    $layers = get_post_meta( $page_ID, $prefix .'group', true );
 
-    return do_shortcode($html);
+    function get_parallax_layers_html($layers){
+
+        $i = 0;
+        $html = '';
+
+        foreach ($layers as $layer){
+
+            $i++;
+
+            $html .= sprintf('<div %s %s %s></div>',
+                sprintf('class="%s %s"',
+                    'parallax-layer',
+                    'col-xs-12'
+                ),
+                sprintf('style="%s %s"',
+                    'background-image: url( '. esc_attr($layer['background_image']) .' );',
+                    'z-index: '. esc_attr($layer['z_index']) .';'
+                ),
+                sprintf('%s %s %s',
+                    'data-ride="parallax"',
+                    'data-direction="'. esc_attr($layer['direction']) .'"',
+                    'data-speed="'. esc_attr($layer['speed']) .'"'
+                )
+            );
+
+            if (count($layers) == $i) {
+                 return $html;
+            }
+        }
+    }
+
+    if($layers){
+        $parallax_layers_html = get_parallax_layers_html($layers);
+
+        return sprintf('<div %s %s><div %s>%s</div></div>',
+            sprintf('class="%s row"',
+                $atts['section_class']
+            ),
+            sprintf('style="padding-bottom: %s;"',
+                esc_attr($parallax_height)
+            ),
+            sprintf('class="%s"',
+                $atts['inner_class']
+            ),
+            $parallax_layers_html
+        );
+    }
 }
 
 /**
-  *
+  * Background Video
   */
 add_shortcode( 'background_video', __NAMESPACE__.'\\get_background_video' );
 function get_background_video( $atts, $content = null ) {
@@ -441,48 +474,121 @@ function get_background_video( $atts, $content = null ) {
     $page_ID = $wp_query->queried_object->ID;
 
     $prefix = 'sage_background_video_';
+    $data_pref = 'data-youtube_video_';
     $videos = get_post_meta( $page_ID, $prefix .'group', true );
     $section_id = $atts['id'] -1;
     $video = $videos[$section_id];
 
-    if($video){
-        $fallback_image = $video[$prefix .'fallback_image'];
-        $shield_color = $video[$prefix .'shield_color'];
-        $shield_opacity = $video[$prefix .'shield_opacity'];
-        $height = $video[$prefix .'height'];
-        $ratio = $video[$prefix .'ratio'];
-        $fitbg = $video[$prefix .'fitbg'];
-        $repeat = $video[$prefix .'repeat'];
-        $mute = $video[$prefix .'mute'];
-        $pause = $video[$prefix .'pause'];
-        $start = $video[$prefix .'start'];
-        $id = $video[$prefix .'id'];
-
-        $data_pref = 'data-youtube_video_';
-
-        if($id) return sprintf('<div id="%s" class="background-video row %s" %s style="%s">%s</div>%s',
-            'background-video-'. $atts['id'],
-            $fitbg ? esc_attr('fit-background') : 'fit-container',
-            sprintf('%s %s %s %s %s %s %s',
-                $data_pref .'id="'. esc_attr($id) .'"',
-                $data_pref .'fitbg="'. esc_attr($fitbg) .'"',
-                $data_pref .'ratio="'. esc_attr($ratio) .'"',
-                $data_pref .'start="'. esc_attr($start) .'"',
-                $data_pref .'pause="'. esc_attr($pause) .'"',
-                $data_pref .'repeat="'. esc_attr($repeat) .'"',
-                $data_pref .'mute="'. esc_attr($mute) .'"'
-            ),
+    if($video['id']) return sprintf('<div %s %s %s %s>%s %s</div>',
+        'id="background-video-'. $atts['id'] .'"',
+        sprintf('class="background-video %s %s %s"',
+            $video['fitbg'] ? 'fit-background' : 'fit-container',
+            $video['expand'] ? 'expand' : '',
+            $video['controls'] ? 'enable-controls' : ''
+        ),
+        sprintf('%s %s %s %s %s %s %s %s %s',
+            $data_pref .'id="'. esc_attr($video['id']) .'"',
+            $data_pref .'fitbg="'. esc_attr($video['fitbg']) .'"',
+            $data_pref .'ratio="'. esc_attr($video['ratio']) .'"',
+            $data_pref .'start="'. esc_attr($video['start']) .'"',
+            $data_pref .'pause="'. esc_attr($video['pause']) .'"',
+            $data_pref .'repeat="'. esc_attr($video['repeat']) .'"',
+            $data_pref .'mute="'. esc_attr($video['mute']) .'"',
+            $data_pref .'expand="'. esc_attr($video['expand']) .'"',
+            $data_pref .'controls="'. esc_attr($video['controls']) .'"'
+        ),
+        sprintf('style="%s %s"',
+            'background-image: url('. esc_attr($video['fallback_image']) .');',
+            $video['expand'] ? '' : 'padding-bottom: '. esc_attr($video['height']) .';'
+        ),
+        do_shortcode($content),
+        sprintf('<style>.ytplayer-shield{%s}</style>',
             sprintf('%s %s',
-                'background-image: url('. esc_attr($fallback_image) .');',
-                'padding-bottom: '. esc_attr($height) .';'
-            ),
-            do_shortcode($content),
-            sprintf('<style>.ytplayer-shield{%s}</style>',
-                sprintf('%s %s',
-                    'background-color: '. esc_attr($shield_color) .';',
-                    'opacity: '. esc_attr($shield_opacity) .';'
-                )
+                'background-color: '. esc_attr($video['shield_color']) .';',
+                'opacity: '. esc_attr($video['shield_opacity']) .';'
             )
-        );
+        )
+    );
+}
+
+/**
+  * Case studies
+  */
+add_shortcode( 'case_studies', __NAMESPACE__.'\\get_case_studies' );
+function get_case_studies( $atts, $content = null ) {
+    $defaults = array ();
+    $atts = wp_parse_args( $atts, $defaults );
+
+    global $wp_query;
+    $page_ID = $wp_query->queried_object->ID;
+
+    $prefix = 'sage_case_studies_';
+    $title = get_post_meta( $page_ID, $prefix .'title', true );
+    $posts = get_post_meta( $page_ID, $prefix .'posts', true );
+    $url = get_post_meta( $page_ID, $prefix .'url', true );
+
+    function get_case_studies_posts_html($post_ids){
+
+        $i = 0;
+        $html = '';
+
+        foreach ($post_ids as $id){
+
+            $i++;
+            $post = get_post($id);
+            setup_postdata($post);
+
+            $html .= sprintf('<div class="case-study"><a href="%s">%s</a>%s</div>',
+                get_the_permalink($id),
+                get_the_post_thumbnail($id, 'case_studies'),
+                Extras\excerpt(20)
+            );
+
+            if (count($post_ids) == $i) {
+                 return $html;
+            }
+        }
+        wp_reset_postdata();
+
     }
+
+    $case_studies_posts_html = get_case_studies_posts_html($posts);
+
+    if($posts) return sprintf('<div class="case-studies">%s%s%s</div>',
+        '<h3 class="title text-center">'. __($title, 'sage') .'</h3>',
+        sprintf('<div class="inner">%s</div>',
+            $case_studies_posts_html
+        ),
+        sprintf('<p class="text-center"><a href="%s" class="btn btn-default">%s</a></p>',
+            $url,
+            __('View All', 'sage'). ' ' . __($title, 'sage')
+        )
+    );
+
+}
+
+/**
+  * Case studies page
+  */
+add_shortcode( 'case_studies_page', __NAMESPACE__.'\\get_case_studies_page' );
+function get_case_studies_page( $atts, $content = null ) {
+    $defaults = array ();
+    $atts = wp_parse_args( $atts, $defaults );
+
+    $args=array(
+      'post_type' => array('animations', 'interactive'),
+      'post_status' => 'publish',
+      'posts_per_page' => -1
+    );
+
+    $my_query = new \WP_Query($args);
+    if( $my_query->have_posts() ) {
+        ob_start();
+        while ($my_query->have_posts()) : $my_query->the_post();
+          get_template_part('templates/content', get_post_type() != 'post' ? get_post_type() : get_post_format());
+        endwhile;
+    }
+    wp_reset_query();
+    return ob_get_clean();
+
 }

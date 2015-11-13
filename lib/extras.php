@@ -27,16 +27,28 @@ add_filter('body_class', __NAMESPACE__ . '\\body_class');
 /**
  * Clean up the_excerpt()
  */
-function excerpt_more() {
-  return ' &hellip; <a href="' . get_permalink() . '">' . __('Continued', 'sage') . '</a>';
-}
 add_filter('excerpt_more', __NAMESPACE__ . '\\excerpt_more');
+function excerpt_more() {
+  return ' &hellip; <a href="' . get_permalink() . '">' . __('More', 'sage') . '</a>';
+}
+function excerpt($limit=40) {
+  $content = explode(' ', get_the_content(), $limit);
+  if (count($content)>=$limit) {
+    array_pop($content);
+    $content = implode(" ",$content).'&hellip; <a href="' . get_permalink() . '">' . __('More', 'sage') . '</a>';
+  } else {
+    $content = implode(" ",$content);
+  }
+  $content = preg_replace('/\[.+\]/','', $content);
+  $content = apply_filters('the_content', $content);
+  $content = str_replace(']]>', ']]&gt;', $content);
+  return $content;
+}
 
 /**
  * Filtering the Wrapper: Custom Post Types
  */
 add_filter('sage/wrap_base', __NAMESPACE__ . '\\sage_wrap_base_cpts');
-
 function sage_wrap_base_cpts($templates) {
     $cpt = get_post_type();
     if ($cpt) {
@@ -48,6 +60,7 @@ function sage_wrap_base_cpts($templates) {
 /**
  * Search Filter
  */
+add_action('pre_get_posts', __NAMESPACE__ . '\\search_filter');
 function search_filter($query) {
   if ( !is_admin() && $query->is_main_query() ) {
     if ($query->is_search) {
@@ -56,11 +69,10 @@ function search_filter($query) {
   }
 }
 
-add_action('pre_get_posts', __NAMESPACE__ . '\\search_filter');
-
 /**
  * Login Image
  */
+add_action( 'login_enqueue_scripts', __NAMESPACE__ . '\\my_login_logo' );
 function my_login_logo() { ?>
     <style type="text/css">
         body.login div#login h1 a {
@@ -73,7 +85,6 @@ function my_login_logo() { ?>
         }
     </style>
 <?php }
-add_action( 'login_enqueue_scripts', __NAMESPACE__ . '\\my_login_logo' );
 
 
 /**
@@ -87,7 +98,7 @@ function query_post_type($query) {
             $post_type = $post_type;
         else
             $post_type = array('post', 'property', 'nav_menu_item');
-        $query->set('post_type',$post_type);
+        $query->set('post_type', $post_type);
         return $query;
     }
 }
@@ -95,24 +106,14 @@ function query_post_type($query) {
 /**
  * Set default term on publish
  */
-add_action( 'publish_property', __NAMESPACE__ . '\\set_prop_tax' );
+add_action( 'publish_product', __NAMESPACE__ . '\\set_prop_tax' );
 function set_prop_tax($post_ID){
-    $type = 'property_category';
+    $type = 'product_category';
     if(!has_term('',$type,$post_ID)){
         $term = get_term_by('slug', 'uncategorized', $type);
         wp_set_object_terms($post_ID, $term->term_id, $type);
     }
 }
-
-/**
- * Dequeue bootstrap 3 shortcodes scripts
- */
-add_action( 'the_post', __NAMESPACE__ . '\\dequeue_bootstrap_scripts', 9999 );
-function dequeue_bootstrap_scripts($post_ID){
-    wp_dequeue_script( 'bootstrap-shortcodes-tooltip' );
-    wp_dequeue_script( 'bootstrap-shortcodes-popover' );
-}
-
 
 /**
  * Gravity Forms Field Choice Markup Pre-render
@@ -125,4 +126,16 @@ function choice_render($choice_markup, $choice, $field, $value){
         return $choice_markup;
     }
     return $choice_markup;
+}
+
+/**
+ * Add page specific CSS
+ */
+add_action( 'get_footer', __NAMESPACE__ . '\\page_specific_css', 9999 );
+function page_specific_css(){
+    global $wp_query;
+    $page_ID = $wp_query->queried_object->ID;
+    $prefix = 'sage_page_options_';
+    $page_css = get_post_meta( $page_ID, $prefix .'css', true );
+    echo $page_css ? '<style>' . $page_css . '</style>' : '';
 }
