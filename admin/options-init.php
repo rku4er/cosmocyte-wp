@@ -299,12 +299,6 @@
                  'default'  => array( 'url' => 'http://s.wordpress.org/style/images/codeispoetry.png' ),
              ),
              array(
-                 'id'       => 'navbar-logo-text',
-                 'type'     => 'switch',
-                 'title'    => __( 'Show title/tagline', 'redux-framework-demo' ),
-                 'default'  => '0'
-             ),
-             array(
                  'id'       => 'favicon',
                  'type'     => 'media',
                  'url'      => true,
@@ -384,9 +378,22 @@
                  'default'  => '1'
              ),
              array(
+                 'id'       => 'navbar-logo-text',
+                 'type'     => 'switch',
+                 'title'    => __( 'Show title/tagline', 'redux-framework-demo' ),
+                 'default'  => '0'
+             ),
+             array(
+                 'id'       => 'socials-in-header',
+                 'type'     => 'switch',
+                 'title'    => __( 'Socials in header', 'redux-framework-demo' ),
+                 'subtitle' => __( 'Show socials in header?', 'redux-framework-demo' ),
+                 'default'  => '0',
+             ),
+             array(
                  'id'       => 'show-scrolltop-link',
                  'type'     => 'switch',
-                 'title'    => __( 'Scroll Top Button', 'redux-framework-demo' ),
+                 'title'    => __( 'Back-to-Top Button', 'redux-framework-demo' ),
                  'default'  => '1'
              ),
          )
@@ -541,13 +548,6 @@
          'id'         => 'social-networks',
          'subsection' => true,
          'fields'     => array(
-             array(
-                 'id'       => 'socials-in-header',
-                 'type'     => 'switch',
-                 'title'    => __( 'Socials in header', 'redux-framework-demo' ),
-                 'subtitle' => __( 'Show socials in header?', 'redux-framework-demo' ),
-                 'default'  => '0',
-             ),
              array(
                  'id'       => 'socials',
                  'type'     => 'sortable',

@@ -18,11 +18,8 @@
     // All pages
     'common': {
       init: function() {
-        // JavaScript to be fired on all pages
-        var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
         // Debounced resize
-        var debounce = function(func, wait, immediate) {
+        function debounce(func, wait, immediate) {
           var timeout;
           return function() {
             var context = this, args = arguments;
@@ -38,19 +35,19 @@
             clearTimeout(timeout);
             timeout = setTimeout(later, wait);
           };
-        };
+        }
 
         // Disable 300ms click delay on mobile
         FastClick.attach(document.body);
 
         // WP admin bar fix
         (function(adminbar){
-            if(document.getElementById(adminbar)){
+            if($(adminbar).length){
                 $('.navbar-fixed-top').css({
-                    'margin-top' : $('#'+adminbar).height()
+                    'margin-top' : $(adminbar).height()
                 });
             }
-        })('wpadminbar');
+        })('#wpadminbar');
 
 
         // Tooltip
@@ -108,33 +105,38 @@
 
 
         // File input replacement
-        $("input[type=file]").fileinput({
-            uploadExtraData: {kvId: '10'},
-        });
-
+        function fileupload() {
+            $("input[type=file]").fileinput({
+                uploadExtraData: {kvId: '10'},
+            });
+        }
 
         // Material choices
-        var materialChoices = function(){
+        function materialChoices() {
             $('.checkbox input[type=checkbox]').after("<span class=checkbox-material><span class=check></span></span>");
             $('.radio input[type=radio]').after("<span class=radio-material><span class=circle></span><span class=check></span></span>");
             $('.togglebutton input[type=checkbox]').after("<span class=toggle></span>");
             $('select.form-control').dropdownjs();
-        };
+        }
 
         // Gravity Forms render tweak
-        var gravityChoices = function(){
+        function gravityChoices() {
             $('.gfield_checkbox > li').addClass('checkbox');
             $('.gfield_radio > li').addClass('radio');
             $('select.gfield_select').addClass('form-control');
-        };
+        }
 
+        // pay attention at the launch order
         gravityChoices();
         materialChoices();
+        fileupload();
 
+        // apply material inputs on ajax forms
         $(document).bind('gform_post_render', function(event, form_id, cur_page){
             var form = $('#gform_' + form_id);
             gravityChoices();
             materialChoices();
+            fileupload();
         });
 
         // Set .wrap padding-top equal to navbar height
@@ -180,13 +182,6 @@
                     });
                     object.style.height = window.innerHeight - navbarHeight + 'px';
                 });
-            },
-            setBgPos: function(){
-                $('.carousel-inline[data-type="parallax"]').each(function(){
-                    var $self = $(this);
-                    var offset = $self.offset();
-                    $self.find('.item').css('background-position', '50% '+ (offset.top - $(window).scrollTop())/10 + 'px');
-                });
             }
           };
         };
@@ -196,10 +191,10 @@
             wrapper().spaceTop();
             navbar().spaceTop();
             slider().setHeight();
-            slider().setBgPos();
             watchDropdowns('.dropdown');
         }, 100);
 
+        //align dropdown menus according to free space
         function watchDropdowns(selector){
             $(selector).each(function(){
                 var $self = $(this),
@@ -215,6 +210,7 @@
             });
         }
 
+        //prepare carousel animations
         function prepareAnimations(elems) {
 
             elems.each(function() {
@@ -224,6 +220,7 @@
             });
         }
 
+        //fire carousel animations
         function doAnimations(elems) {
             var animEndEv = 'webkitAnimationEnd animationend';
 
@@ -236,6 +233,7 @@
             });
         }
 
+        //window load callback
         $(window).load(function(){
             // needed by preloaded
             $('body').addClass('loaded');
@@ -263,45 +261,6 @@
 
         });
 
-        // Parallax effect for Bootstrap Carousel
-        $(window).on('scroll', function(){
-           slider().setBgPos();
-        }).trigger('scroll');
-
-        // Parallax-bg  section
-        $('[data-ride="parallax"]').each(function(){
-         // declare the variable to affect the defined data-type
-         var $scroll = $(this);
-         if(!$scroll.data('speed')){
-           $scroll.data('speed', 100);
-         }
-         if(!$scroll.data('direction')){
-           $scroll.data('direction', 'bottom');
-         }
-
-          $(window).scroll(function() {
-            var octothorpe = 1;
-            // also, negative value because we're scrolling upwards
-            if($scroll.data('direction') === 'top'){
-              octothorpe =  -1;
-            }else if($scroll.data('direction') === 'bottom'){
-              octothorpe =  1;
-            }
-
-            var height = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
-            var yPos = octothorpe * (($(window).scrollTop() - $scroll.offset().top + height/2 ) / (100 / $scroll.data('speed')));
-            yPos = Math.round(yPos);
-
-            // move the background
-            $scroll.css({
-              '-webkit-transform' : 'translate3d(0, ' + yPos + 'px, 0)',
-              '-moz-transform'    : 'translate3d(0, ' + yPos + 'px, 0)',
-              '-ms-transform'     : 'translate3d(0, ' + yPos + 'px, 0)',
-              'transform'         : 'translate3d(0, ' + yPos + 'px, 0)'
-            });
-          }).trigger('scroll');
-
-        });
 
         //Scroll Top Link
         $('#scrollTopLink').on('click', function(e){
@@ -326,6 +285,53 @@
             e.stopPropagation();
         });
 
+        // Parallax Background Sections
+        $('[data-ride="parallax"]').each(function(){
+         // declare the variable to affect the defined data-type
+
+            var $self = $(this);
+
+            if(!$self.data('speed')) {
+                $self.data('speed', 100);
+            }
+            if(!$self.data('direction')) {
+                $self.data('direction', 'bottom');
+            }
+
+            $window = $(window);
+
+            $window.scroll(function() {
+                var offsetCoords = $self.offset(),
+                    topOffset = offsetCoords.top;
+
+                if ( ($window.scrollTop() + $window.height()) > (topOffset) &&
+                    (topOffset + $self.height()) > $window.scrollTop() ) {
+
+                    var octothorpe = 1;
+                    // also, negative value because we're scrolling upwards
+                    if($self.data('direction') === 'top'){
+                      octothorpe =  -1;
+                    }else if($self.data('direction') === 'bottom'){
+                      octothorpe =  1;
+                    }
+
+                    var yPos = octothorpe * (($window.scrollTop() - topOffset) / 100) * $self.data('speed') ;
+
+                    yPos = Math.round(yPos);
+
+                    // move the background
+                    $self.css({
+                      '-webkit-transform' : 'translate3d(0, ' + yPos + 'px, 0)',
+                      '-moz-transform'    : 'translate3d(0, ' + yPos + 'px, 0)',
+                      '-ms-transform'     : 'translate3d(0, ' + yPos + 'px, 0)',
+                      'transform'         : 'translate3d(0, ' + yPos + 'px, 0)',
+                      'top'               : $self.data('offset')
+                    });
+                }
+            }).trigger('scroll');
+        });
+
+        //Background Video Section
         $('.background-video').each(function(){
             var $self = $(this),
                 opts = {},

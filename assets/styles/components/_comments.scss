@@ -4,6 +4,21 @@
 .comment-list ol {
   list-style: none;
 }
+.comment-content {
+    font-size: ceil($font-size-base * 0.8);
+}
+.comment-meta{
+    margin-top: 1em;
+}
+.comment-metadata{
+    font-size: ceil($font-size-base * 0.8);
+    font-weight: 700;
+    margin-bottom: .5em;
+}
+.comment-reply-link{
+    @extend .btn;
+    @extend .btn-default;
+}
 .comment-form p {
   @extend .form-group;
 }

@@ -1,9 +1,6 @@
 /**
  * FUllscreen BG
  */
-.main >.background-video.fit-container{
-    @include make-row();
-}
 .background-video {
     background-position: 50% 50%;
     background-repeat: no-repeat;
@@ -11,6 +8,10 @@
     overflow: hidden;
     background-size: cover;
     height: 0;
+
+    & + .background-video{
+        border-top: 5px solid #aaa;
+    }
 
     &.fit-background{
         position: absolute;

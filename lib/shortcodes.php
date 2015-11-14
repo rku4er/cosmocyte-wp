@@ -9,17 +9,7 @@ use Roots\Sage\Extras;
  */
 add_shortcode( 'slider', __NAMESPACE__.'\\slider_init' );
 function slider_init( $attr ){
-    $defaults = array (
-        "animation"  => 'fade',
-        "interval"   => false,
-        "parallax"   => false,
-        "pause"      => false,
-        "wrap"       => false,
-        "keyboard"   => false,
-        "arrows"     => false,
-        "bullets"    => false,
-        "fullscreen" => false,
-    );
+    $defaults = array ();
     $atts = wp_parse_args( $atts, $defaults );
 
     if( isset($GLOBALS['carousel_count']) )
@@ -28,42 +18,24 @@ function slider_init( $attr ){
       $GLOBALS['carousel_count'] = 0;
 
     global $wp_query;
-    $page_ID = $wp_query->queried_object->ID;
-    $prefix = 'sage_slider_';
-    $slides = get_post_meta( $page_ID, $prefix .'group', true );
+
+    $page_ID     = $wp_query->queried_object->ID;
+    $prefix      = 'sage_slider_';
+    $animation   = get_post_meta( $page_ID, $prefix .'animation', true );
+    $pause       = get_post_meta( $page_ID, $prefix .'hover', true );
+    $wrap        = get_post_meta( $page_ID, $prefix .'wrap', true );
+    $keyboard    = get_post_meta( $page_ID, $prefix .'keyboard', true );
+    $arrows      = get_post_meta( $page_ID, $prefix .'arrows', true );
+    $bullets     = get_post_meta( $page_ID, $prefix .'bullets', true );
+    $fullscreen  = get_post_meta( $page_ID, $prefix .'fullscreen', true );
+    $interval    = get_post_meta( $page_ID, $prefix .'interval', true );
+    $height      = get_post_meta( $page_ID, $prefix .'height', true );
+    $slides      = get_post_meta( $page_ID, $prefix .'group', true );
+
+    $indicators  = array();
+    $items       = array();
 
     if($slides){
-
-        $animation   = get_post_meta( $page_ID, $prefix .'animation', true );
-        $animation   = $animation ? $animation : $atts['animation'];
-        $parallax    = get_post_meta( $page_ID, $prefix .'parallax', true );
-        $parallax    = $parallax ? $parallax : $atts['parallax'];
-        $pause       = get_post_meta( $page_ID, $prefix .'hover', true );
-        $pause       = $pause ? $pause : $atts['pause'];
-        $wrap        = get_post_meta( $page_ID, $prefix .'wrap', true );
-        $wrap        = $wrap ? $wrap : $atts['wrap'];
-        $keyboard    = get_post_meta( $page_ID, $prefix .'keyboard', true );
-        $keyboard    = $keyboard ? $keyboard : $atts['keyboard'];
-        $arrows      = get_post_meta( $page_ID, $prefix .'arrows', true );
-        $arrows      = $arrows ? $arrows : $atts['arrows'];
-        $bullets     = get_post_meta( $page_ID, $prefix .'bullets', true );
-        $bullets     = $bullets ? $bullets : $atts['bullets'];
-        $fullscreen  = get_post_meta( $page_ID, $prefix .'fullscreen', true );
-        $fullscreen  = $fullscreen ? $fullscreen : $atts['fullscreen'];
-        $interval    = get_post_meta( $page_ID, $prefix .'interval', true );
-        $interval    = $interval ? $interval : $atts['interval'];
-        $height      = get_post_meta( $page_ID, $prefix .'height', true );
-        $height      = $height ? $height : $atts['height'];
-
-        $div_class   = 'row carousel carousel-inline'
-            . (($animation === 'fade') ? ' slide carousel-fade' : ' slide')
-            . ($fullscreen ? ' carousel-fullscreen' : '')
-            . ($progress ? ' carousel-progress' : '');
-        $inner_class = 'carousel-inner';
-        $id          = 'custom-carousel-'. $GLOBALS['carousel_count'];
-
-        $indicators = array();
-        $items = array();
 
         $i = -1;
 
@@ -80,11 +52,9 @@ function slider_init( $attr ){
                 $slide['link_url'] ? '</a>' : ''
             );
 
-            $item_style = sprintf('%s',
-                sprintf('background-image: url(%s); background-attachment: %s;',
-                    $image_obj[0],
-                    $parallax ? 'fixed' : 'scroll'
-                )
+            $item_style = sprintf('%s %s',
+                'background-image: url('. $image_obj[0] .');',
+                'background-attachment: scroll;'
             );
 
             if($slide['title_text']){
@@ -143,18 +113,17 @@ function slider_init( $attr ){
                 );
             }
 
-            $active_class = ($i == 0) ? ' active' : '';
+            $active_class = ($i == 0) ? 'active' : '';
 
             $indicators[] = sprintf(
               '<li class="%s" data-target="%s" data-slide-to="%s"></li>',
               $active_class,
-              esc_attr( '#' . $id ),
-              esc_attr( $i )
+              '#' . $carousel_id,
+              $i
             );
 
-            $items[] = sprintf(
-              '<div class="%s" style="%s">%s%s</div>',
-              'item' . $active_class,
+            $items[] = sprintf('<div class="%s" style="%s">%s%s</div>',
+              'item ' . $active_class,
               $item_style,
               $image,
               $caption
@@ -162,24 +131,52 @@ function slider_init( $attr ){
 
         endforeach;
 
-        return sprintf(
-          '<div class="%s" id="%s" data-ride="carousel" %s%s%s%s%s>'
-              . '%s<div class="%s" style="height: %s;">%s</div>%s</div>',
-          esc_attr( $div_class ),
-          esc_attr( $id ),
-          ( $parallax )   ? ' data-type="parallax"' : ' data-type="false"',
-          ( $interval )   ? ' data-interval="'. $interval * 1000 .'"' : ' data-interval="false"',
-          ( $pause )      ? ' data-pause="hover"' : ' data-pause="false"',
-          ( $wrap )       ? ' data-wrap="true"' : ' data-wrap="false"',
-          ( $keyboard )   ? ' data-keyboard="true"' : ' data-keyboard="false"',
-          ( $bullets )    ? '<ol class="carousel-indicators">' . implode( $indicators ) . '</ol>' : '',
-          ( $inner_class ),
-          $height,
-          implode($items),
-          ( $arrows ) ? sprintf( '%s%s',
-              '<a class="left carousel-control"  href="' . esc_url( '#' . $id ) . '" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>',
-              '<a class="right carousel-control" href="' . esc_url( '#' . $id ) . '" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>'
-          ) : ''
+        $carousel_class = sprintf('row carousel carousel-inline %s %s',
+            $animation === 'fade' ? ' slide carousel-fade' : ' slide',
+            $fullscreen ? ' carousel-fullscreen' : ''
+        );
+        $carousel_inner_class = 'carousel-inner';
+        $carousel_id = 'carousel-'. $GLOBALS['carousel_count'];
+
+        if($items) return sprintf( '<div %s %s><div %s %s>%s</div>%s</div>',
+            sprintf('class="%s" id="%s"',
+                $carousel_class,
+                $carousel_id
+            ),
+            sprintf('%s %s %s %s',
+                'data-ride="carousel"',
+                'data-interval="'. ($interval ? $interval*1000 : 'false') .'"',
+                'data-pause="'. ($pause ? 'hover' : 'false') .'"',
+                'data-wrap="'. ($wrap ? 'true' : 'false') .'"',
+                'data-keyboard="'. ($keyboard ? 'true' : 'false') .'"'
+            ),
+            sprintf('class="%s"',
+                $carousel_inner_class
+            ),
+            sprintf('style="height: %s;"',
+                $height
+            ),
+            implode($items),
+            sprintf('%s%s',
+                $bullets ? sprintf('<ol class="%s">%s</ol>',
+                    'carousel-indicators',
+                    implode($indicators)
+                ) : '',
+                $arrows ? sprintf( '%s%s',
+                    sprintf('<a class="%s" href="%s" data-slide="%s">%s</a>',
+                        'left carousel-control',
+                        '#'. $carousel_id,
+                        'prev',
+                        '<span class="glyphicon glyphicon-chevron-left"></span>'
+                    ),
+                    sprintf('<a class="%s" href="%s" data-slide="%s">%s</a>',
+                        'right carousel-control',
+                        '#'. $carousel_id,
+                        'next',
+                        '<span class="glyphicon glyphicon-chevron-right"></span>'
+                    )
+                ) : ''
+            )
         );
     }
 }
@@ -196,9 +193,7 @@ function socials_init( $attr ){
     $atts = wp_parse_args( $atts, $defaults );
 
     global $redux_demo;
-    $options = $redux_demo;
-
-    $socials = $options['socials'];
+    $socials = $redux_demo['socials'];
 
     if($socials){
         $buffer = '<span class="socials">';
@@ -208,6 +203,7 @@ function socials_init( $attr ){
             $buffer .= $value ? '<a href="'. $value . '" target="_blank"><i class="fa fa-'. strtolower($key) .'"></i></a>' : '';
         }
         $buffer .= '</span>';
+
         return $buffer;
     }
 }
@@ -218,12 +214,7 @@ function socials_init( $attr ){
   */
 add_shortcode( 'tabs_vertical', __NAMESPACE__.'\\bs_tabs_vertical' );
 function bs_tabs_vertical( $atts, $content = null ) {
-  $defaults = array (
-      "type"   => false,
-      "xclass" => false,
-      "data"   => false,
-      "text"   => false,
-  );
+  $defaults = array ();
   $atts = wp_parse_args( $atts, $defaults );
 
   if( isset( $GLOBALS['tabs_count'] ) )
@@ -231,14 +222,8 @@ function bs_tabs_vertical( $atts, $content = null ) {
   else
     $GLOBALS['tabs_count'] = 0;
 
-  $GLOBALS['tabs_default_count'] = 0;
-
-  $ul_class  = 'nav';
-  $ul_class .= ( $atts['type'] )     ? ' nav-' . $atts['type'] : ' nav-tabs';
-  $ul_class .= ( $atts['xclass'] )   ? ' ' . $atts['xclass'] : '';
-  $ul_class .= ' tabs-vertical tabs-left';
-
-  $div_class = 'tab-content';
+  $tabs_nav_class  = 'nav nav-tabs tabs-vertical tabs-left';
+  $tabs_content_class = 'tab-content';
 
   $id = 'custom-tabs-'. $GLOBALS['tabs_count'];
 
@@ -249,12 +234,6 @@ function bs_tabs_vertical( $atts, $content = null ) {
   // Extract the tab titles for use in the tab widget.
   if ( $atts_map ) {
     $tabs = array();
-    $GLOBALS['tabs_default_active'] = true;
-    foreach( $atts_map as $check ) {
-        if( !empty($check["tab"]["active"]) ) {
-            $GLOBALS['tabs_default_active'] = false;
-        }
-    }
 
     $i = 0;
     foreach( $atts_map as $tab ) {
@@ -273,14 +252,15 @@ function bs_tabs_vertical( $atts, $content = null ) {
       );
     }
   }
+
   return sprintf(
     '<div class="row"><div class="col-sm-4">%s<ul class="%s" id="%s"%s>%s</ul></div><div class="col-sm-8"><div class="%s">%s</div></div></div>',
     sprintf('<h4 class="sidebar-title" style="text-align: right">%s</h4>', $atts['text']),
-    esc_attr( $ul_class ),
+    esc_attr( $tabs_nav_class ),
     esc_attr( $id ),
     ( $data_props ) ? ' ' . $data_props : '',
     ( $tabs )  ? implode( $tabs ) : '',
-    esc_attr( $div_class ),
+    esc_attr( $tabs_content_class ),
     do_shortcode( $content )
   );
 }
@@ -429,10 +409,11 @@ function get_parallax_section( $atts, $content = null ) {
                     'background-image: url( '. esc_attr($layer['background_image']) .' );',
                     'z-index: '. esc_attr($layer['z_index']) .';'
                 ),
-                sprintf('%s %s %s',
+                sprintf('%s %s %s %s',
                     'data-ride="parallax"',
                     'data-direction="'. esc_attr($layer['direction']) .'"',
-                    'data-speed="'. esc_attr($layer['speed']) .'"'
+                    'data-speed="'. esc_attr($layer['speed']) .'"',
+                    'data-offset="'. esc_attr($layer['offset']) .'"'
                 )
             );
 
@@ -463,7 +444,7 @@ function get_parallax_section( $atts, $content = null ) {
 /**
   * Background Video
   */
-add_shortcode( 'background_video', __NAMESPACE__.'\\get_background_video' );
+add_shortcode( 'background', __NAMESPACE__.'\\get_background_video' );
 function get_background_video( $atts, $content = null ) {
     $defaults = array (
         'id' => '1'
@@ -479,7 +460,7 @@ function get_background_video( $atts, $content = null ) {
     $section_id = $atts['id'] -1;
     $video = $videos[$section_id];
 
-    if($video['id']) return sprintf('<div %s %s %s %s>%s %s</div>',
+    return sprintf('<div %s %s %s %s>%s %s</div>',
         'id="background-video-'. $atts['id'] .'"',
         sprintf('class="background-video %s %s %s"',
             $video['fitbg'] ? 'fit-background' : 'fit-container',
@@ -502,7 +483,7 @@ function get_background_video( $atts, $content = null ) {
             $video['expand'] ? '' : 'padding-bottom: '. esc_attr($video['height']) .';'
         ),
         do_shortcode($content),
-        sprintf('<style>.ytplayer-shield{%s}</style>',
+        sprintf('<style>#background-video-'. $atts['id'] .' .ytplayer-shield{%s}</style>',
             sprintf('%s %s',
                 'background-color: '. esc_attr($video['shield_color']) .';',
                 'opacity: '. esc_attr($video['shield_opacity']) .';'
@@ -538,7 +519,7 @@ function get_case_studies( $atts, $content = null ) {
             $post = get_post($id);
             setup_postdata($post);
 
-            $html .= sprintf('<div class="case-study"><a href="%s">%s</a>%s</div>',
+            $html .= sprintf('<div class="item"><a href="%s">%s</a>%s</div>',
                 get_the_permalink($id),
                 get_the_post_thumbnail($id, 'case_studies'),
                 Extras\excerpt(20)
@@ -554,7 +535,7 @@ function get_case_studies( $atts, $content = null ) {
 
     $case_studies_posts_html = get_case_studies_posts_html($posts);
 
-    if($posts) return sprintf('<div class="case-studies">%s%s%s</div>',
+    if($posts) return sprintf('<div class="case-studies-section">%s%s%s</div>',
         '<h3 class="title text-center">'. __($title, 'sage') .'</h3>',
         sprintf('<div class="inner">%s</div>',
             $case_studies_posts_html

@@ -12,7 +12,7 @@
 
 /* Headings margins */
 h1, h2, h3, h4, h5, h6{
-     margin: 1em 0;
+     margin: 1.7em 0 .3em;
 }
 
 /*Custom bulleted lists*/
@@ -81,6 +81,12 @@ body {
      padding-bottom: $grid-gutter-width;
 }
 
+/*make sections fullvidth*/
+.container-fluid .main >div:not(.container){
+    @include make-row();
+    width: auto !important;
+}
+
 /*rollover effects*/
 .table-hover > tbody > tr{
     transition: background-color .1s ease-in-out;
@@ -89,3 +95,9 @@ body {
     transition: background-color 0.1s ease-in-out;
 }
 
+.more{
+     color: inherit;
+     text-transform: uppercase;
+     font-style: italic;
+     font-weight: 700;
+}

@@ -146,7 +146,7 @@ function sage_register_background_video() {
 
     $cmb_group = new_cmb2_box( array(
         'id'           => $prefix . 'metabox',
-        'title'        => __( 'Background Video', 'cmb2' ),
+        'title'        => __( 'Background', 'cmb2' ),
         'object_types' => array( 'page', 'post', 'animations', 'interactive'),
     ) );
 
@@ -162,6 +162,13 @@ function sage_register_background_video() {
             'sortable'      => true, // beta
             'closed'     => true, // true to have the groups closed by default
         ),
+    ) );
+
+    $cmb_group->add_group_field( $group_field_id, array(
+        'name' => __( 'Background image', 'cmb2' ),
+        'desc' => __( 'Upload an image or enter an URL', 'cmb2' ),
+        'id'   => 'fallback_image',
+        'type' => 'file',
     ) );
 
     $cmb_group->add_group_field( $group_field_id, array(
@@ -245,14 +252,7 @@ function sage_register_background_video() {
     ) );
 
     $cmb_group->add_group_field( $group_field_id, array(
-        'name' => __( 'Video background fallback', 'cmb2' ),
-        'desc' => __( 'Upload an image or enter an URL', 'cmb2' ),
-        'id'   => 'fallback_image',
-        'type' => 'file',
-    ) );
-
-    $cmb_group->add_group_field( $group_field_id, array(
-        'name'          => __( 'Video shield color', 'cmb2' ),
+        'name'          => __( 'Shield color', 'cmb2' ),
         'desc'          => __( 'Overlay color', 'cmb2' ),
         'id'            => 'shield_color',
         'type'          => 'colorpicker',
@@ -260,7 +260,7 @@ function sage_register_background_video() {
     ) );
 
     $cmb_group->add_group_field( $group_field_id, array(
-        'name'          => __( 'Video shield opacity', 'cmb2' ),
+        'name'          => __( 'Shield opacity', 'cmb2' ),
         'desc'          => __( 'Enter value from 0 to 1 eg: 0.1', 'cmb2' ),
         'id'            => 'shield_opacity',
         'type'          => 'text_small',
@@ -329,6 +329,14 @@ function sage_register_parallax() {
         'id'   => 'speed',
         'type' => 'text_small',
         'default' => '10',
+    ) );
+
+    $cmb_group->add_group_field( $group_field_id, array(
+        'name' => __( 'Top Offset', 'cmb2' ),
+        'desc' => __( 'Set layer offset in px/%/vh/vw', 'cmb2' ),
+        'id'   => 'offset',
+        'type' => 'text_small',
+        'default' => '',
     ) );
 
     $cmb_group->add_group_field( $group_field_id, array(
@@ -465,14 +473,6 @@ function sage_register_slider_options() {
     ) );
 
     $cmb_group->add_field( array(
-        'name' => __( 'Parallax', 'cmb2' ),
-        'desc' => __( 'Turn on vertical parallax', 'cmb2' ),
-        'id'   => $prefix . 'parallax',
-        'type' => 'checkbox',
-        'default' => '',
-    ) );
-
-    $cmb_group->add_field( array(
         'name' => __( 'Pause', 'cmb2' ),
         'desc' => __( 'Turn on pause on hover', 'cmb2' ),
         'id'   => $prefix . 'hover',
@@ -514,7 +514,7 @@ function sage_register_slider_options() {
 
     $cmb_group->add_field( array(
         'name' => __( 'Fullscreen', 'cmb2' ),
-        'desc' => __( 'Turn on fullscreen mode(beta)', 'cmb2' ),
+        'desc' => __( 'Turn on fullscreen mode', 'cmb2' ),
         'id'   => $prefix . 'fullscreen',
         'type' => 'checkbox',
         'default' => '',

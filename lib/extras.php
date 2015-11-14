@@ -29,13 +29,13 @@ add_filter('body_class', __NAMESPACE__ . '\\body_class');
  */
 add_filter('excerpt_more', __NAMESPACE__ . '\\excerpt_more');
 function excerpt_more() {
-  return ' &hellip; <a href="' . get_permalink() . '">' . __('More', 'sage') . '</a>';
+  return ' &hellip; <a class="more" href="' . get_permalink() . '">' . __('More', 'sage') . '</a>';
 }
 function excerpt($limit=40) {
   $content = explode(' ', get_the_content(), $limit);
   if (count($content)>=$limit) {
     array_pop($content);
-    $content = implode(" ",$content).'&hellip; <a href="' . get_permalink() . '">' . __('More', 'sage') . '</a>';
+    $content = implode(" ",$content).'&hellip; <a class="more" href="' . get_permalink() . '">' . __('More', 'sage') . '</a>';
   } else {
     $content = implode(" ",$content);
   }

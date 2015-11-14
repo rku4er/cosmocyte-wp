@@ -1,10 +1,11 @@
 .btn{
     transition: .3s ease-in-out;
     transition-property: color, background-color, border-color;
-    border: 0 none;
     position: relative;
     text-shadow: 0 1px 1px rgba(0,0,0,0.3);
     font-size: 17px;
+    border-radius: 5px;
+    text-transform: uppercase;
 
     &:not(.btn-default).waves-button, 
     &:not(.btn-default).waves-button-input, 
@@ -14,7 +15,7 @@
     }
 
     &.btn-default{
-        color: $brand-primary;
+        color: lighten($brand-primary, 10%);
 
         &:hover,
         &:focus{

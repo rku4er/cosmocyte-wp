@@ -1,14 +1,12 @@
 .carousel{
     margin-bottom: 50px;
-    /*box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);*/
 
-    .item{
-        padding: 0 10%;
-    }
     .carousel-inner{
         > .item{
+            padding: 0 10%;
             transition-duration: 1s;
             transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+            transition-property: left, transform;
             will-change: left, opacity;
         }
     }
@@ -32,8 +30,10 @@
             opacity: 1;
         }
     }
+
     &.carousel-inline{
         margin-bottom: 0;
+
         .item{
             background-size: contain;
             background-repeat: no-repeat;
@@ -59,18 +59,21 @@
             bottom: 10px;
         }
     }
+
     &.carousel-fullscreen{
         .item{
             height: 100%;
             background-size: cover;
         }
     }
+
     .carousel-control{
          transition: all .2s ease-in-out;
          z-index: 11;
          background: transparent;
          width: 10%;
     }
+
     .carousel-caption{
         position: absolute;
         left: 0;
@@ -197,6 +200,7 @@
         } 
     }
 }
+
 .carousel-indicators{
     bottom: -40px;
     margin-bottom: 0;

@@ -1,3 +1,8 @@
+.gform_wrapper {
+    padding-left:  ($grid-gutter-width / 2);
+    padding-right: ($grid-gutter-width / 2);
+    margin-bottom: $grid-gutter-width;
+}
 .gform_wrapper ul {
   @extend .list-unstyled;
 }
