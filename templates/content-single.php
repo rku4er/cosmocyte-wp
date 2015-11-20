@@ -9,7 +9,7 @@
 <?php while (have_posts()) : the_post(); ?>
   <article <?php post_class(); ?>>
     <?php if(!$hide_header): ?>
-      <h1 class="entry-title"><?php echo Titles\title(); ?></h1>
+      <h1 class="entry-single-title"><?php echo Titles\title(); ?></h1>
     <?php endif; ?>
     <div class="entry-content">
       <?php the_content(); ?>

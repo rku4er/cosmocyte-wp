@@ -1,3 +1,10 @@
-.post{
+.post,
+.hentry{
     margin-bottom: $grid-gutter-width;
+}
+.hentry .entry-title{
+    margin-top: .5em;
+    font-size: inherit;
+    font-family: inherit;
+    font-weight: 700;
 }

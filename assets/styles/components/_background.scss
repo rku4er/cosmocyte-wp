@@ -1,0 +1,93 @@
+/**
+ * FUllscreen BG
+ */
+.background-video {
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    position: relative;
+    overflow: hidden;
+    background-size: cover;
+    height: 0;
+
+    & + .background-video{
+        border-top: 5px solid #aaa;
+    }
+
+    &.fit-background{
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: -1;
+    }
+
+    &.fit-container{
+
+        >.ytplayer-container >.ytplayer-player {
+            top: 50% !important;
+            transform: translate3d(0,-50%,0);
+        }
+
+    }
+
+    &.enable-controls{
+         >.ytplayer-shield{
+             display: none;
+         }
+    }
+
+    &.expand{
+        height: auto;
+    }
+
+    &.loaded{
+        >.ytplayer-container{
+            opacity: 1;
+        }
+    }
+
+    >.container{
+         z-index: 1;
+         position: relative;
+    }
+
+    .background-video{
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    video,
+    source {
+        bottom: 0;
+        left: 0;
+        min-height: 100%;
+        min-width: 100%;
+        position: absolute;
+    }
+
+    .ytplayer-container{
+        bottom: 0;
+        height: 100%;
+        left: 0;
+        min-width: 100%;
+        position: absolute;
+        right: 0;
+        top: 0;
+        opacity: 0;
+        transform: opacity .3s ease-out;
+    }
+
+    .ytplayer-shield {
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+    }
+
+    .ytplayer-player {
+        position: absolute;
+    }
+
+}

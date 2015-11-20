@@ -13,14 +13,4 @@
     &:not(.btn-default).waves-button:visited{
         color: #fff;
     }
-
-    &.btn-default{
-        color: lighten($brand-primary, 10%);
-
-        &:hover,
-        &:focus{
-            color: #fff;
-            background-color: $brand-primary;
-        }
-    }
 }

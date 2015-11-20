@@ -65,6 +65,13 @@ function sage_register_general_options() {
     ) );
 
     $cmb_demo->add_field( array(
+        'name' => __( 'Lightbox Video URL', 'cmb2' ),
+        'desc' => __( 'Will be shown on thumbnail click', 'cmb2' ),
+        'id'   => $prefix . 'lightbox_video_url',
+        'type' => 'text',
+    ) );
+
+    $cmb_demo->add_field( array(
         'name' => __( 'Page specific CSS', 'cmb2' ),
         'desc' => __( 'Type here your custom styles', 'cmb2' ),
         'id'   => $prefix . 'css',
@@ -172,6 +179,14 @@ function sage_register_background_video() {
     ) );
 
     $cmb_group->add_group_field( $group_field_id, array(
+        'name' => __( 'Height', 'cmb2' ),
+        'desc' => __( 'Set height of video container', 'cmb2' ),
+        'id'   => 'height',
+        'type' => 'text_small',
+        'default' => '25%'
+    ) );
+
+    $cmb_group->add_group_field( $group_field_id, array(
         'name' => __( 'Video ID', 'cmb2' ),
         'desc' => __( 'Put Youtube video id', 'cmb2' ),
         'id'   => 'id',
@@ -193,14 +208,6 @@ function sage_register_background_video() {
         'id'   => 'start',
         'type' => 'text_small',
         'default' => '0'
-    ) );
-
-    $cmb_group->add_group_field( $group_field_id, array(
-        'name' => __( 'Height', 'cmb2' ),
-        'desc' => __( 'Set height of video container', 'cmb2' ),
-        'id'   => 'height',
-        'type' => 'text_small',
-        'default' => '20%'
     ) );
 
     $cmb_group->add_group_field( $group_field_id, array(

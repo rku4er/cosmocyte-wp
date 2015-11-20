@@ -4,7 +4,7 @@
         color: inherit;
         font-size: ceil($font-size-base * 2);
     }
-    @media (min-width: 480px) {
+    @media (min-width: $screen-sm-min) {
         .inner{
             display: table;
             table-layout: fixed;
@@ -18,11 +18,26 @@
     .item{
         padding: 10px;
         font-size: 14px;
+        line-height: 19px;
+        @include clearfix;
+
+        h3{
+            margin-top: .5em;
+            font-size: inherit;
+            color: $accent-color;
+            font-weight: 700;
+            font-family: inherit;
+        }
 
         img{
-            width: 100%;
+            float: left;
+            margin-right: 10px;
             display: block;
             margin-bottom: 1em;
+            width: 100%;
+            @media (max-width: $screen-xs-max){
+                width: 25%;
+            }
         }
     }
     .btn{

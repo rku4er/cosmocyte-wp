@@ -377,7 +377,7 @@ function get_clearfix( $atts, $content = null ) {
 add_shortcode( 'parallax', __NAMESPACE__.'\\get_parallax_section' );
 function get_parallax_section( $atts, $content = null ) {
     $defaults = array (
-        'section_class'   => 'parallax-section',
+        'section_class'   => 'parallax-section row',
         'inner_class'     => 'parallax-inner',
         'layer_class'     => 'parallax-layer'
     );
@@ -447,6 +447,7 @@ function get_parallax_section( $atts, $content = null ) {
 add_shortcode( 'background', __NAMESPACE__.'\\get_background_video' );
 function get_background_video( $atts, $content = null ) {
     $defaults = array (
+        'section_class'   => 'background-video row',
         'id' => '1'
     );
     $atts = wp_parse_args( $atts, $defaults );
@@ -457,12 +458,12 @@ function get_background_video( $atts, $content = null ) {
     $prefix = 'sage_background_video_';
     $data_pref = 'data-youtube_video_';
     $videos = get_post_meta( $page_ID, $prefix .'group', true );
-    $section_id = $atts['id'] -1;
-    $video = $videos[$section_id];
+    $video = $videos[$atts['id'] -1];
 
     return sprintf('<div %s %s %s %s>%s %s</div>',
         'id="background-video-'. $atts['id'] .'"',
-        sprintf('class="background-video %s %s %s"',
+        sprintf('class="%s %s %s %s"',
+            $atts['section_class'],
             $video['fitbg'] ? 'fit-background' : 'fit-container',
             $video['expand'] ? 'expand' : '',
             $video['controls'] ? 'enable-controls' : ''
@@ -513,30 +514,34 @@ function get_case_studies( $atts, $content = null ) {
         $i = 0;
         $html = '';
 
-        foreach ($post_ids as $id){
+        $args=array(
+          'post_type' => array('animations', 'interactive'),
+          'post_status' => 'publish',
+          'posts_per_page' => -1,
+          'post__in' => $post_ids
+        );
 
-            $i++;
-            $post = get_post($id);
-            setup_postdata($post);
+        $my_query = new \WP_Query($args);
 
-            $html .= sprintf('<div class="item"><a href="%s">%s</a>%s</div>',
-                get_the_permalink($id),
-                get_the_post_thumbnail($id, 'case_studies'),
-                Extras\excerpt(20)
-            );
-
-            if (count($post_ids) == $i) {
-                 return $html;
-            }
+        if( $my_query->have_posts() ) {
+            while ($my_query->have_posts()) : $my_query->the_post();
+              $html .= sprintf('<div class="item"><a href="%s">%s</a><h3>%s</h3>%s</div>',
+                  get_the_permalink(get_the_ID()),
+                  get_the_post_thumbnail(get_the_ID(), 'case_studies'),
+                  get_the_title(get_the_ID()),
+                  Extras\excerpt(20)
+              );
+            endwhile;
         }
-        wp_reset_postdata();
+        wp_reset_query();
+        return $html;
 
     }
 
     $case_studies_posts_html = get_case_studies_posts_html($posts);
 
     if($posts) return sprintf('<div class="case-studies-section">%s%s%s</div>',
-        '<h3 class="title text-center">'. __($title, 'sage') .'</h3>',
+        '<h2 class="title text-center">'. __($title, 'sage') .'</h2>',
         sprintf('<div class="inner">%s</div>',
             $case_studies_posts_html
         ),
@@ -551,13 +556,16 @@ function get_case_studies( $atts, $content = null ) {
 /**
   * Case studies page
   */
-add_shortcode( 'case_studies_page', __NAMESPACE__.'\\get_case_studies_page' );
-function get_case_studies_page( $atts, $content = null ) {
-    $defaults = array ();
+add_shortcode( 'posts', __NAMESPACE__.'\\get_custom_posts' );
+function get_custom_posts( $atts, $content = null ) {
+    $defaults = array (
+        'type' => 'post'
+    );
     $atts = wp_parse_args( $atts, $defaults );
+    $html = '';
 
     $args=array(
-      'post_type' => array('animations', 'interactive'),
+      'post_type' => explode(',', $atts['type']),
       'post_status' => 'publish',
       'posts_per_page' => -1
     );
@@ -566,10 +574,13 @@ function get_case_studies_page( $atts, $content = null ) {
     if( $my_query->have_posts() ) {
         ob_start();
         while ($my_query->have_posts()) : $my_query->the_post();
-          get_template_part('templates/content', get_post_type() != 'post' ? get_post_type() : get_post_format());
+            get_template_part('templates/content', get_post_type() != 'post' ? get_post_type() : get_post_format());
         endwhile;
     }
     wp_reset_query();
-    return ob_get_clean();
+    $html .= '<div class="archive">';
+    $html .= ob_get_clean();
+    $html .= '</div>';
+    return $html;
 
 }

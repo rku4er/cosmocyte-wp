@@ -29,7 +29,7 @@ add_filter('body_class', __NAMESPACE__ . '\\body_class');
  */
 add_filter('excerpt_more', __NAMESPACE__ . '\\excerpt_more');
 function excerpt_more() {
-  return ' &hellip; <a class="more" href="' . get_permalink() . '">' . __('More', 'sage') . '</a>';
+  return '&hellip; <a class="more" href="' . get_permalink() . '">' . __('More', 'sage') . '</a>';
 }
 function excerpt($limit=40) {
   $content = explode(' ', get_the_content(), $limit);
@@ -138,4 +138,45 @@ function page_specific_css(){
     $prefix = 'sage_page_options_';
     $page_css = get_post_meta( $page_ID, $prefix .'css', true );
     echo $page_css ? '<style>' . $page_css . '</style>' : '';
+}
+
+/**
+ * Custom HTML
+ */
+add_action( 'get_header', __NAMESPACE__ . '\\custom_html', 999 );
+function custom_html(){
+    global $redux_demo;
+    $editor_content = $redux_demo['custom-html-editor'];
+    echo $editor_content ? $editor_content : '';
+}
+/**
+ * Custom CSS
+ */
+add_action( 'get_header', __NAMESPACE__ . '\\custom_css', 999 );
+function custom_css(){
+    global $redux_demo;
+    $editor_content = $redux_demo['custom-css-editor'];
+    echo $editor_content ? '<style>'. $editor_content .'</style>' : '';
+}
+
+/**
+ * Custom JS
+ */
+add_action( 'get_footer', __NAMESPACE__ . '\\custom_js', 999 );
+function custom_js(){
+    global $redux_demo;
+    $editor_content = $redux_demo['custom-js-editor'];
+    echo $editor_content ? '<script>'. $editor_content .'</script>' : '';
+}
+
+
+/**
+ *  Favicon
+ */
+add_action('wp_head', __NAMESPACE__ . '\\site_favicon');
+function site_favicon() {
+    global $redux_demo;
+    $options = $redux_demo;
+    $favicon = $options['favicon']['url'] ? $options['favicon']['url'] : get_template_directory_uri().'/dist/images/favicon.ico';
+    echo '<link rel="shortcut icon" href="'. $favicon .'">';
 }

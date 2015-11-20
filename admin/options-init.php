@@ -435,7 +435,7 @@
                  'line-height' => false,
                  'text-align'  => false,
                  'subsets'     => false,
-                 'output'      => array( 'h1,h2,h3,h4,h5,h6,h2.entry-title a' ),
+                 'output'      => array( 'h1,h2,h3,h4,h5,h6' ),
                  'compiler'    => true,
                  'units'       => 'px',
                  'default'     => array(
@@ -505,6 +505,28 @@
      ));
 
      Redux::setSection( $opt_name, array(
+         'title'      => __( 'Social Networks', 'redux-framework-demo' ),
+         'id'         => 'social-networks',
+         'subsection' => true,
+         'fields'     => array(
+             array(
+                 'id'       => 'socials',
+                 'type'     => 'sortable',
+                 'title'    => __( 'Social icons', 'redux-framework-demo' ),
+                 'label'    => true,
+                 'options'  => array(
+                     'Facebook'   => '',
+                     'Twitter'    => '',
+                     'Google Plus'=> '',
+                     'Linkedin'   => '',
+                     'Pinterest'  => '',
+                     'Instagram'  => ''
+                 )
+             ),
+         )
+     ) );
+
+     Redux::setSection( $opt_name, array(
          'title'      => __( 'Code Insertion', 'redux-framework-demo' ),
          'id'         => 'code',
          'subsection' => true,
@@ -541,34 +563,6 @@
              ),
          )
      ) );
-
-
-     Redux::setSection( $opt_name, array(
-         'title'      => __( 'Social Networks', 'redux-framework-demo' ),
-         'id'         => 'social-networks',
-         'subsection' => true,
-         'fields'     => array(
-             array(
-                 'id'       => 'socials',
-                 'type'     => 'sortable',
-                 'title'    => __( 'Social icons', 'redux-framework-demo' ),
-                 'label'    => true,
-                 'options'  => array(
-                     'Facebook'   => '',
-                     'Twitter'    => '',
-                     'Google Plus'=> '',
-                     'Linkedin'   => '',
-                     'Pinterest'  => '',
-                     'Instagram'  => ''
-                 )
-             ),
-         )
-     ) );
-
-
-
-
-
 
 
     if ( file_exists( dirname( __FILE__ ) . '/../README.md' ) ) {

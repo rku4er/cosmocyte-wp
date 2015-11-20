@@ -12,7 +12,7 @@ add_theme_support('soil-clean-up');         // Enable clean up from Soil
 add_theme_support('soil-relative-urls');    // Enable relative URLs from Soil
 add_theme_support('soil-nice-search');      // Enable nice search from Soil
 add_theme_support('soil-google-analytics', $options['google-analytics-id']); // Enable Google Analytics
-//add_theme_support('soil-jquery-cdn');     // Enable jQuery from the Google CDN
+add_theme_support('soil-jquery-cdn');     // Enable jQuery from the Google CDN
 //add_theme_support('soil-js-to-footer');   // Enable js to footer
 //add_theme_support('soil-nav-walker');     // Enable clean nav walker
 add_theme_support('bootstrap-gallery');     // Enable Bootstrap Gallery
