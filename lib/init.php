@@ -87,7 +87,7 @@ function widgets_init() {
 }
 
 /**
- * Work Post Type
+ * Custom Post Type
  */
  add_action( 'init', __NAMESPACE__ . '\\create_post_type_product' );
 function create_post_type_product() {

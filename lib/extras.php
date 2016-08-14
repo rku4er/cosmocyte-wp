@@ -64,7 +64,7 @@ add_action('pre_get_posts', __NAMESPACE__ . '\\search_filter');
 function search_filter($query) {
   if ( !is_admin() && $query->is_main_query() ) {
     if ($query->is_search) {
-      $query->set('post_type', array('post'));
+      $query->set('post_type', array('post', 'animations'));
     }
   }
 }
@@ -134,7 +134,8 @@ function choice_render($choice_markup, $choice, $field, $value){
 add_action( 'get_footer', __NAMESPACE__ . '\\page_specific_css', 9999 );
 function page_specific_css(){
     global $wp_query;
-    $page_ID = $wp_query->queried_object->ID;
+    $object = $wp_query->queried_object;
+    $page_ID = !empty($object) ? $object->ID : '';
     $prefix = 'sage_page_options_';
     $page_css = get_post_meta( $page_ID, $prefix .'css', true );
     echo $page_css ? '<style>' . $page_css . '</style>' : '';

@@ -10,16 +10,19 @@
                 get_the_post_thumbnail(
                     get_the_ID(),
                     'thumbnail',
-                    array('class' => "attachment-$size alignleft")
+                    array('class' => "alignleft")
                 )
             );
         }else{
             the_post_thumbnail(
                 'thumbnail',
-                array('class' => "attachment-$size alignleft"
+                array('class' => "alignleft"
             ));
         }
     ?>
+
     <h2 class="entry-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
+
     <?php the_excerpt(); ?>
+
 </article>

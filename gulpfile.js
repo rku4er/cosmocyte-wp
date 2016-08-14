@@ -10,15 +10,18 @@ var gulpif       = require('gulp-if');
 var imagemin     = require('gulp-imagemin');
 var jshint       = require('gulp-jshint');
 var lazypipe     = require('lazypipe');
-var less         = require('gulp-less');
+//var less         = require('gulp-less');
 var merge        = require('merge-stream');
-var minifyCss    = require('gulp-minify-css');
+var cleanCss     = require('gulp-clean-css');
 var plumber      = require('gulp-plumber');
 var rev          = require('gulp-rev');
 var runSequence  = require('run-sequence');
 var sass         = require('gulp-sass');
 var sourcemaps   = require('gulp-sourcemaps');
 var uglify       = require('gulp-uglify');
+var svgstore     = require('gulp-svgstore');
+var inject       = require('gulp-inject');
+var svgmin       = require('gulp-svgmin');
 
 // See https://github.com/austinpray/asset-builder
 var manifest = require('asset-builder')('./assets/manifest.json');
@@ -85,9 +88,9 @@ var cssTasks = function(filename) {
     .pipe(function() {
       return gulpif(enabled.maps, sourcemaps.init());
     })
-    .pipe(function() {
-      return gulpif('*.less', less());
-    })
+    //.pipe(function() {
+      //return gulpif('*.less', less());
+    //})
     .pipe(function() {
       return gulpif('*.scss', sass({
         outputStyle: 'nested', // libsass doesn't support expanded yet
@@ -100,16 +103,15 @@ var cssTasks = function(filename) {
     .pipe(autoprefixer, {
       browsers: [
         'last 2 versions',
-        'ie 8',
-        'ie 9',
-        'android 2.3',
         'android 4',
         'opera 12'
       ]
     })
-    .pipe(minifyCss, {
-      advanced: false,
-      rebase: false
+    .pipe(cleanCss, {
+      advanced: true,
+      aggressiveMerging: true,
+      mediaMerging: true,
+      processImport: true
     })
     .pipe(function() {
       return gulpif(enabled.rev, rev());
@@ -165,6 +167,26 @@ var writeToManifest = function(directory) {
 
 // ## Gulp tasks
 // Run `gulp -T` for a task summary
+
+
+// The following script will combine all svg sources into single svg file
+// with <symbol> elements. The name of result svg is the base directory name
+// of the first file src.svg.
+gulp.task('icons', function () {
+    var svgs = gulp
+        .src([path.source + 'icons/**/*.svg'])
+        .pipe(svgmin())
+        .pipe(svgstore({ inlineSvg: true }));
+
+    function fileContents (filePath, file) {
+        return file.contents.toString();
+    }
+
+    return gulp
+        .src([path.source + 'icons-svg.php'])
+        .pipe(inject(svgs, { transform: fileContents }))
+        .pipe(gulp.dest('templates'));
+});
 
 // ### Styles
 // `gulp styles` - Compiles, combines, and optimizes Bower CSS and project CSS.
@@ -248,7 +270,7 @@ gulp.task('clean', require('del').bind(null, [path.dist]));
 // See: http://www.browsersync.io
 gulp.task('watch', function() {
   browserSync.init({
-    files: ['{lib,templates}/**/*.php', '*.php'],
+    files: ['{lib,templates,woocommerce,auctions}/**/*.php', '*.php'],
     proxy: config.devUrl,
     snippetOptions: {
       whitelist: ['/wp-admin/admin-ajax.php'],
@@ -259,6 +281,7 @@ gulp.task('watch', function() {
   gulp.watch([path.source + 'scripts/**/*'], ['jshint', 'scripts']);
   gulp.watch([path.source + 'fonts/**/*'], ['fonts']);
   gulp.watch([path.source + 'images/**/*'], ['images']);
+  gulp.watch([path.source + 'icons/**/*'], ['icons']);
   gulp.watch(['bower.json', 'assets/manifest.json'], ['build']);
 });
 
@@ -268,7 +291,7 @@ gulp.task('watch', function() {
 gulp.task('build', function(callback) {
   runSequence('styles',
               'scripts',
-              ['fonts', 'images'],
+              ['fonts', 'images', 'icons'],
               callback);
 });
 

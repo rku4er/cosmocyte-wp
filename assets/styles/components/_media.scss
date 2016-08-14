@@ -26,3 +26,9 @@ a .img-thumbnail{
     border: 0 none;
     font-size: ceil(($font-size-base * 0.9));
 }
+
+img.img-fluid {
+  display: inline-block;
+  height: auto;
+  max-width: 100%;
+}

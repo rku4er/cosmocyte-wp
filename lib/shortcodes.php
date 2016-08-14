@@ -464,30 +464,30 @@ function get_background_video( $atts, $content = null ) {
         'id="background-video-'. $atts['id'] .'"',
         sprintf('class="%s %s %s %s"',
             $atts['section_class'],
-            $video['fitbg'] ? 'fit-background' : 'fit-container',
-            $video['expand'] ? 'expand' : '',
-            $video['controls'] ? 'enable-controls' : ''
+            !empty($video['fitbg']) ? 'fit-background' : 'fit-container',
+            !empty($video['expand']) ? 'expand' : '',
+            !empty($video['controls']) ? 'enable-controls' : ''
         ),
         sprintf('%s %s %s %s %s %s %s %s %s',
-            $data_pref .'id="'. esc_attr($video['id']) .'"',
-            $data_pref .'fitbg="'. esc_attr($video['fitbg']) .'"',
-            $data_pref .'ratio="'. esc_attr($video['ratio']) .'"',
-            $data_pref .'start="'. esc_attr($video['start']) .'"',
-            $data_pref .'pause="'. esc_attr($video['pause']) .'"',
-            $data_pref .'repeat="'. esc_attr($video['repeat']) .'"',
-            $data_pref .'mute="'. esc_attr($video['mute']) .'"',
-            $data_pref .'expand="'. esc_attr($video['expand']) .'"',
-            $data_pref .'controls="'. esc_attr($video['controls']) .'"'
+            !empty($video['id']) ? $data_pref .'id="'. esc_attr($video['id']) .'"' : '',
+            !empty($video['fitbg']) ? $data_pref .'fitbg="'. esc_attr($video['fitbg']) .'"' : '',
+            !empty($video['ratio']) ? $data_pref .'ratio="'. esc_attr($video['ratio']) .'"' : '',
+            !empty($video['start']) ? $data_pref .'start="'. esc_attr($video['start']) .'"' : '',
+            !empty($video['pause']) ? $data_pref .'pause="'. esc_attr($video['pause']) .'"' : '',
+            !empty($video['repeat']) ? $data_pref .'repeat="'. esc_attr($video['repeat']) .'"' : '',
+            !empty($video['mute']) ? $data_pref .'mute="'. esc_attr($video['mute']) .'"' : '',
+            !empty($video['expand']) ? $data_pref .'expand="'. esc_attr($video['expand']) .'"' : '',
+            !empty($video['controls']) ? $data_pref .'controls="'. esc_attr($video['controls']) .'"' : ''
         ),
         sprintf('style="%s %s"',
-            'background-image: url('. esc_attr($video['fallback_image']) .');',
-            $video['expand'] ? '' : 'padding-bottom: '. esc_attr($video['height']) .';'
+            !empty($video['fallback_image']) ? 'background-image: url('. esc_attr($video['fallback_image']) .');' : '',
+            (empty($video['expand']) && !empty($video['height'])) ? 'padding-bottom: '. esc_attr($video['height']) .';' : ''
         ),
         do_shortcode($content),
         sprintf('<style>#background-video-'. $atts['id'] .' .ytplayer-shield{%s}</style>',
             sprintf('%s %s',
-                'background-color: '. esc_attr($video['shield_color']) .';',
-                'opacity: '. esc_attr($video['shield_opacity']) .';'
+                !empty($video['shield_color']) ? 'background-color: '. esc_attr($video['shield_color']) .';' : '',
+                !empty($video['shield_opacity']) ? 'opacity: '. esc_attr($video['shield_opacity']) .';' : ''
             )
         )
     );

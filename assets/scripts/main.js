@@ -18,6 +18,7 @@
     // All pages
     'common': {
       init: function() {
+
         // Debounced resize
         function debounce(func, wait, immediate) {
           var timeout;
@@ -35,6 +36,45 @@
             clearTimeout(timeout);
             timeout = setTimeout(later, wait);
           };
+        }
+
+        //align dropdown menus according to free space
+        function watchDropdowns(selector){
+            $(selector).each(function(){
+                var $self = $(this),
+                    $dm = $self.find('>.dropdown-menu');
+
+                if($dm.length){
+                    if(($self.offset().left + $self.width() + $dm.width()) < $(window).width()){
+                        $self.removeClass('dropdown-rtl');
+                    } else{
+                        $self.addClass('dropdown-rtl');
+                    }
+                }
+            });
+        }
+
+        //prepare carousel animations
+        function prepareAnimations(elems) {
+
+            elems.each(function() {
+                var $this = $(this),
+                    $animationType = $this.data('animation');
+                $this.removeClass('animated ' + $animationType);
+            });
+        }
+
+        //fire carousel animations
+        function doAnimations(elems) {
+            var animEndEv = 'webkitAnimationEnd animationend';
+
+            elems.each(function() {
+                var $this = $(this),
+                    $animationType = $this.data('animation');
+                $this.addClass('animated ' + $animationType).one(animEndEv, function() {
+                    $this.removeClass($animationType);
+                });
+            });
         }
 
         // Disable 300ms click delay on mobile
@@ -194,44 +234,6 @@
             watchDropdowns('.dropdown');
         }, 100);
 
-        //align dropdown menus according to free space
-        function watchDropdowns(selector){
-            $(selector).each(function(){
-                var $self = $(this),
-                    $dm = $self.find('>.dropdown-menu');
-
-                if($dm.length){
-                    if(($self.offset().left + $self.width() + $dm.width()) < $(window).width()){
-                        $self.removeClass('dropdown-rtl');
-                    } else{
-                        $self.addClass('dropdown-rtl');
-                    }
-                }
-            });
-        }
-
-        //prepare carousel animations
-        function prepareAnimations(elems) {
-
-            elems.each(function() {
-                var $this = $(this),
-                    $animationType = $this.data('animation');
-                $this.removeClass('animated ' + $animationType);
-            });
-        }
-
-        //fire carousel animations
-        function doAnimations(elems) {
-            var animEndEv = 'webkitAnimationEnd animationend';
-
-            elems.each(function() {
-                var $this = $(this),
-                    $animationType = $this.data('animation');
-                $this.addClass('animated ' + $animationType).one(animEndEv, function() {
-                    $this.removeClass($animationType);
-                });
-            });
-        }
 
         //window load callback
         $(window).load(function(){
