@@ -349,18 +349,22 @@
             opts.videoId = $self.data(prefix + 'id');
             opts.ratio = parseInt(ratio[0],10)/parseInt(ratio[1],10);
 
-            $self.YTPlayer({
-                videoId: opts.videoId,
-                fitToBackground: opts.fitbg,
-                ratio: opts.ratio,
-                mute: opts.mute,
-                pauseOnScroll: opts.pauseOnScroll,
-                repeat: opts.repeat,
-                start: opts.start,
-                playerVars: {
-                  controls: opts.controls
-                }
-            });
+            if (opts.videoId !== undefined) {
+
+              $self.YTPlayer({
+                  videoId: opts.videoId,
+                  fitToBackground: opts.fitbg,
+                  ratio: opts.ratio,
+                  mute: opts.mute,
+                  pauseOnScroll: opts.pauseOnScroll,
+                  repeat: opts.repeat,
+                  start: opts.start,
+                  playerVars: {
+                    controls: opts.controls
+                  }
+              });
+
+            }
 
         });
 
