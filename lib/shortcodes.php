@@ -445,12 +445,12 @@ function get_parallax_section( $atts, $content = null ) {
   * Background Video
   */
 add_shortcode( 'background', __NAMESPACE__.'\\get_background_video' );
-function get_background_video( $atts, $content = null ) {
+function get_background_video( $attr, $content = null ) {
     $defaults = array (
         'section_class'   => 'background-video row',
         'id' => '1'
     );
-    $atts = wp_parse_args( $atts, $defaults );
+    $atts = wp_parse_args( $attr, $defaults );
 
     global $wp_query;
     $page_ID = $wp_query->queried_object->ID;
@@ -460,7 +460,7 @@ function get_background_video( $atts, $content = null ) {
     $videos = get_post_meta( $page_ID, $prefix .'group', true );
     $video = $videos[$atts['id'] -1];
 
-    return sprintf('<div %s %s %s %s>%s %s</div>',
+    return sprintf('<div %s %s %s %s>%s %s %s</div>',
         'id="background-video-'. $atts['id'] .'"',
         sprintf('class="%s %s %s %s"',
             $atts['section_class'],
@@ -483,6 +483,7 @@ function get_background_video( $atts, $content = null ) {
             !empty($video['fallback_image']) ? 'background-image: url('. esc_attr($video['fallback_image']) .');' : '',
             (empty($video['expand']) && !empty($video['height'])) ? 'padding-bottom: '. esc_attr($video['height']) .';' : ''
         ),
+        !empty($video['lightbox_url']) ? '<a href="' . $video['lightbox_url'] . '" class="video-lightbox"></a>' : '',
         do_shortcode($content),
         sprintf('<style>#background-video-'. $atts['id'] .' .ytplayer-shield{%s}</style>',
             sprintf('%s %s',

@@ -181,3 +181,10 @@ function site_favicon() {
     $favicon = $options['favicon']['url'] ? $options['favicon']['url'] : get_template_directory_uri().'/dist/images/favicon.ico';
     echo '<link rel="shortcut icon" href="'. $favicon .'">';
 }
+
+add_action('before_content', __NAMESPACE__ . '\\before_content');
+function before_content() {
+  $prefix = 'sage_page_options_';
+  $content = get_post_meta( get_the_ID(), $prefix .'before_content', true );
+  echo do_shortcode($content);
+}

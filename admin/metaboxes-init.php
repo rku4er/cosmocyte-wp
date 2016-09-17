@@ -65,10 +65,10 @@ function sage_register_general_options() {
     ) );
 
     $cmb_demo->add_field( array(
-        'name' => __( 'Lightbox Video URL', 'cmb2' ),
-        'desc' => __( 'Will be shown on thumbnail click', 'cmb2' ),
-        'id'   => $prefix . 'lightbox_video_url',
-        'type' => 'text',
+        'name' => __( 'Before content', 'cmb2' ),
+        'desc' => __( 'Full width row of content before main content', 'cmb2' ),
+        'id'   => $prefix . 'before_content',
+        'type' => 'textarea_code',
     ) );
 
     $cmb_demo->add_field( array(
@@ -195,6 +195,14 @@ function sage_register_background_video() {
     ) );
 
     $cmb_group->add_group_field( $group_field_id, array(
+        'name' => __( 'Lightbox Video URL', 'cmb2' ),
+        'desc' => __( 'Put Youtube video URL', 'cmb2' ),
+        'id'   => 'lightbox_url',
+        'type' => 'text_medium',
+        'default' => '',
+    ) );
+
+    $cmb_group->add_group_field( $group_field_id, array(
         'name' => __( 'Ratio', 'cmb2' ),
         'desc' => __( 'Allowed format: 16/9', 'cmb2' ),
         'id'   => 'ratio',
@@ -220,7 +228,7 @@ function sage_register_background_video() {
 
     $cmb_group->add_group_field( $group_field_id, array(
         'name' => __( 'Fit to background', 'cmb2' ),
-        'desc' => __( 'Fits to background vs fitting to the container specified with width', 'cmb2' ),
+        'desc' => __( 'Fit to background instead the container', 'cmb2' ),
         'id'   => 'fitbg',
         'type' => 'checkbox',
         'default' => ''
